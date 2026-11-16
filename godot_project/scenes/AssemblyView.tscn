@@ -1,0 +1,247 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/AssemblyView.gd" id="1_assembly"]
+[ext_resource type="Script" path="res://scripts/BlueprintGridVisual.gd" id="2_grid"]
+[ext_resource type="Script" path="res://scripts/ProbeVisual.gd" id="3_probe"]
+[ext_resource type="Texture2D" path="res://assets/icons/icon_lock.svg" id="4_lock"]
+
+[node name="AssemblyView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_assembly")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="Content" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="LeftPanel" type="PanelContainer" parent="VBox/Content"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Content/LeftPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="CategoryButtons" type="HBoxContainer" parent="VBox/Content/LeftPanel/VBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BtnCat0" type="Button" parent="VBox/Content/LeftPanel/VBox/CategoryButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Ракети"
+
+[node name="BtnCat1" type="Button" parent="VBox/Content/LeftPanel/VBox/CategoryButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Платформи"
+
+[node name="BtnCat2" type="Button" parent="VBox/Content/LeftPanel/VBox/CategoryButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Живлення"
+
+[node name="BtnCat3" type="Button" parent="VBox/Content/LeftPanel/VBox/CategoryButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Зв'язок"
+
+[node name="BtnCat4" type="Button" parent="VBox/Content/LeftPanel/VBox/CategoryButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Прилади"
+
+[node name="HBoxSlotCounter" type="HBoxContainer" parent="VBox/Content/LeftPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LblSlotInfo" type="Label" parent="VBox/Content/LeftPanel/VBox/HBoxSlotCounter"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+text = "Слоти обладнання: 2 / 3"
+
+[node name="IconHintLock" type="TextureRect" parent="VBox/Content/LeftPanel/VBox/HBoxSlotCounter"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_lock")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LblLockHint" type="Label" parent="VBox/Content/LeftPanel/VBox/HBoxSlotCounter"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "заблоковано"
+
+[node name="ScrollItems" type="ScrollContainer" parent="VBox/Content/LeftPanel/VBox"]
+custom_minimum_size = Vector2(0, 420)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxItems" type="VBoxContainer" parent="VBox/Content/LeftPanel/VBox/ScrollItems"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="CenterPanel" type="PanelContainer" parent="VBox/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BlueprintArea" type="Control" parent="VBox/Content/CenterPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BlueprintGridVisual" type="Node2D" parent="VBox/Content/CenterPanel/BlueprintArea"]
+position = Vector2(360, 270)
+script = ExtResource("2_grid")
+
+[node name="ProbeAnchor" type="Control" parent="VBox/Content/CenterPanel/BlueprintArea"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProbeVisual" type="Node2D" parent="VBox/Content/CenterPanel/BlueprintArea/ProbeAnchor"]
+script = ExtResource("3_probe")
+
+[node name="CenterHeader" type="Label" parent="VBox/Content/CenterPanel/BlueprintArea"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 14.0
+offset_right = 400.0
+offset_bottom = 36.0
+theme_override_font_sizes/font_size = 13
+text = "ГОЛОВНИЙ ОБТІЧНИК РАКЕТИ · МОНТАЖ АПАРАТА"
+
+[node name="BottomHUD" type="PanelContainer" parent="VBox"]
+custom_minimum_size = Vector2(0, 110)
+layout_mode = 2
+
+[node name="HBoxMain" type="HBoxContainer" parent="VBox/BottomHUD"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="HBoxBars" type="HBoxContainer" parent="VBox/BottomHUD/HBoxMain"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="VBoxMass" type="VBoxContainer" parent="VBox/BottomHUD/HBoxMain/HBoxBars"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LabelMassTitle" type="Label" parent="VBox/BottomHUD/HBoxMain/HBoxBars/VBoxMass"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Маса навантаження:"
+
+[node name="BarMass" type="ProgressBar" parent="VBox/BottomHUD/HBoxMain/HBoxBars/VBoxMass"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+value = 50.0
+
+[node name="LabelMass" type="Label" parent="VBox/BottomHUD/HBoxMain/HBoxBars/VBoxMass"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 2
+text = "0 / 0 кг"
+
+[node name="VBoxBudget" type="VBoxContainer" parent="VBox/BottomHUD/HBoxMain/HBoxBars"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LabelBudgetTitle" type="Label" parent="VBox/BottomHUD/HBoxMain/HBoxBars/VBoxBudget"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Бюджет місії:"
+
+[node name="BarBudget" type="ProgressBar" parent="VBox/BottomHUD/HBoxMain/HBoxBars/VBoxBudget"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+value = 50.0
+
+[node name="LabelBudget" type="Label" parent="VBox/BottomHUD/HBoxMain/HBoxBars/VBoxBudget"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 2
+text = "0 / 0 млн $"
+
+[node name="VBoxPower" type="VBoxContainer" parent="VBox/BottomHUD/HBoxMain/HBoxBars"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LabelPowerTitle" type="Label" parent="VBox/BottomHUD/HBoxMain/HBoxBars/VBoxPower"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Баланс живлення:"
+
+[node name="BarPower" type="ProgressBar" parent="VBox/BottomHUD/HBoxMain/HBoxBars/VBoxPower"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+value = 50.0
+
+[node name="LabelPower" type="Label" parent="VBox/BottomHUD/HBoxMain/HBoxBars/VBoxPower"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+autowrap_mode = 2
+text = "0 Вт вир. / 0 спож."
+
+[node name="VBoxScience" type="VBoxContainer" parent="VBox/BottomHUD/HBoxMain"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="LabelScienceTitle" type="Label" parent="VBox/BottomHUD/HBoxMain/VBoxScience"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Наука / Надійність / Дані:"
+
+[node name="LabelScienceVal" type="Label" parent="VBox/BottomHUD/HBoxMain/VBoxScience"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.92, 0.55, 1)
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 2
+text = "0 очок"
+
+[node name="BtnLaunch" type="Button" parent="VBox/BottomHUD/HBoxMain"]
+custom_minimum_size = Vector2(190, 52)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 16
+text = "Запустити місію ->"

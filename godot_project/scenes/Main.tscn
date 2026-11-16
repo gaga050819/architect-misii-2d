@@ -1,0 +1,118 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_main"]
+[ext_resource type="Texture2D" path="res://assets/icons/icon_moon.svg" id="2_moon"]
+[ext_resource type="Texture2D" path="res://assets/icons/icon_sun.svg" id="3_sun"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.08, 0.13, 1)
+
+[node name="ViewContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = 60.0
+grow_horizontal = 2
+
+[node name="HBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LblGameTitle" type="Label" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "АРХІТЕКТОР МІСІЇ 2D"
+
+[node name="SpacerLeft" type="Control" parent="TopBar/HBox"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="HBoxPhaseButtons" type="HBoxContainer" parent="TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="Btn1" type="Button" parent="TopBar/HBox/HBoxPhaseButtons"]
+layout_mode = 2
+text = "1. Ціль"
+
+[node name="Btn2" type="Button" parent="TopBar/HBox/HBoxPhaseButtons"]
+layout_mode = 2
+text = "2. Конструктор"
+
+[node name="Btn3" type="Button" parent="TopBar/HBox/HBoxPhaseButtons"]
+layout_mode = 2
+text = "3. Старт"
+
+[node name="Btn4" type="Button" parent="TopBar/HBox/HBoxPhaseButtons"]
+layout_mode = 2
+text = "4. Переліт"
+
+[node name="Btn5" type="Button" parent="TopBar/HBox/HBoxPhaseButtons"]
+layout_mode = 2
+text = "5. Посадка"
+
+[node name="Btn6" type="Button" parent="TopBar/HBox/HBoxPhaseButtons"]
+layout_mode = 2
+text = "6. Поверхня"
+
+[node name="Btn7" type="Button" parent="TopBar/HBox/HBoxPhaseButtons"]
+layout_mode = 2
+text = "7. Підсумок"
+
+[node name="ThemeBox" type="HBoxContainer" parent="TopBar/HBox"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="IconMoon" type="TextureRect" parent="TopBar/HBox/ThemeBox"]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_moon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ThemeSlider" type="HSlider" parent="TopBar/HBox/ThemeBox"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+
+[node name="IconSun" type="TextureRect" parent="TopBar/HBox/ThemeBox"]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("3_sun")
+expand_mode = 1
+stretch_mode = 5

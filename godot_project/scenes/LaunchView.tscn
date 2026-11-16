@@ -1,0 +1,98 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/LaunchView.gd" id="1_launch"]
+[ext_resource type="Script" path="res://scripts/SpaceportBackground.gd" id="2_bg"]
+[ext_resource type="Script" path="res://scripts/RocketVisual.gd" id="3_rocket"]
+
+[node name="LaunchView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_launch")
+
+[node name="FlightArea" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SpaceportBackground" type="Node2D" parent="FlightArea"]
+script = ExtResource("2_bg")
+
+[node name="RocketVisual" type="Node2D" parent="FlightArea"]
+position = Vector2(640, 623)
+script = ExtResource("3_rocket")
+
+[node name="Telemetry" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 25.0
+offset_right = 440.0
+offset_bottom = 220.0
+
+[node name="VBox" type="VBoxContainer" parent="Telemetry"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LblStatus" type="Label" parent="Telemetry/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.92, 0.55, 1)
+theme_override_font_sizes/font_size = 17
+text = "Готовність до старту"
+
+[node name="HSeparator" type="HSeparator" parent="Telemetry/VBox"]
+layout_mode = 2
+
+[node name="LblAltitude" type="Label" parent="Telemetry/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Висота: 0.0 км"
+
+[node name="LblSpeed" type="Label" parent="Telemetry/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Швидкість: 0.00 км/с"
+
+[node name="LblGForce" type="Label" parent="Telemetry/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Перевантаження: 1.0 G"
+
+[node name="LblDetails" type="Label" parent="Telemetry/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
+theme_override_font_sizes/font_size = 12
+text = "Дальність: 0.0 км | Тиск Q: 0.0 кПа"
+
+[node name="Controls" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -90.0
+offset_right = 220.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="BtnStartLaunch" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(200, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "СТАРТ РАКЕТИ"
+
+[node name="BtnNextPhase" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(200, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "До перельоту ->"

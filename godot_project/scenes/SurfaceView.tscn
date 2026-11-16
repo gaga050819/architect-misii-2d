@@ -1,0 +1,165 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/SurfaceView.gd" id="1_surface"]
+[ext_resource type="Script" path="res://scripts/ProbeVisual.gd" id="2_probe"]
+[ext_resource type="Script" path="res://scripts/SamplingFxVisual.gd" id="3_fx"]
+[ext_resource type="Script" path="res://scripts/SurfaceEnvironmentVisual.gd" id="4_env"]
+
+[node name="SurfaceView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_surface")
+
+[node name="ViewportContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Terrain" type="Control" parent="ViewportContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SurfaceEnvironmentVisual" type="Node2D" parent="ViewportContainer/Terrain"]
+script = ExtResource("4_env")
+
+[node name="VehicleNode" type="Node2D" parent="ViewportContainer/Terrain"]
+position = Vector2(200, 520)
+
+[node name="ProbeVisual" type="Node2D" parent="ViewportContainer/Terrain/VehicleNode"]
+script = ExtResource("2_probe")
+
+[node name="SamplingFxVisual" type="Node2D" parent="ViewportContainer/Terrain"]
+script = ExtResource("3_fx")
+
+[node name="TopHUD" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 80.0
+grow_horizontal = 2
+
+[node name="HBox" type="HBoxContainer" parent="TopHUD"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="LblScience" type="Label" parent="TopHUD/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 18
+text = "Зібрано науки: 0 очок"
+
+[node name="LblHint" type="Label" parent="TopHUD/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Керуйте рухом для пошуку зразків"
+
+[node name="BtnFinish" type="Button" parent="TopHUD/HBox"]
+custom_minimum_size = Vector2(200, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Завершити місію ->"
+
+[node name="Controls" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -90.0
+offset_right = 340.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BtnDriveLeft" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(130, 50)
+layout_mode = 2
+text = "<- Рух вліво"
+
+[node name="BtnSample" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Зібрати пробу"
+
+[node name="BtnAntenna" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(180, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Канал зв'язку DSN"
+
+[node name="BtnDriveRight" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(130, 50)
+layout_mode = 2
+text = "Рух вправо ->"
+
+[node name="SurfaceEventPopup" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -140.0
+offset_right = 280.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="SurfaceEventPopup"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="LblEventTitle" type="Label" parent="SurfaceEventPopup/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.75, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "АВАРІЙНА СИТУАЦІЯ НА ПОВЕРХНІ"
+
+[node name="LblEventDesc" type="Label" parent="SurfaceEventPopup/VBox"]
+layout_mode = 2
+autowrap_mode = 2
+text = "Опис події..."
+
+[node name="LblEventFact" type="Label" parent="SurfaceEventPopup/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 2
+text = "Історичний факт NASA..."
+
+[node name="HBoxOptions" type="HBoxContainer" parent="SurfaceEventPopup/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BtnOpt1" type="Button" parent="SurfaceEventPopup/VBox/HBoxOptions"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Варіант 1"
+
+[node name="BtnOpt2" type="Button" parent="SurfaceEventPopup/VBox/HBoxOptions"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Варіант 2"

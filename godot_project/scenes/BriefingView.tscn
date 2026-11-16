@@ -1,0 +1,119 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/BriefingView.gd" id="1_brief"]
+
+[node name="BriefingView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_brief")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Header" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "БРИФІНГ МІСІЇ: ВИБІР ЦІЛІ ТА НАУКОВОГО КЛАСУ"
+
+[node name="HSeparator" type="HSeparator" parent="VBox"]
+layout_mode = 2
+
+[node name="Content" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="LeftPanel" type="PanelContainer" parent="VBox/Content"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Content/LeftPanel"]
+layout_mode = 2
+
+[node name="LblTitle" type="Label" parent="VBox/Content/LeftPanel/VBox"]
+layout_mode = 2
+text = "Цілі місії:"
+
+[node name="ScrollTargets" type="ScrollContainer" parent="VBox/Content/LeftPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxTargets" type="VBoxContainer" parent="VBox/Content/LeftPanel/VBox/ScrollTargets"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="CenterPanel" type="PanelContainer" parent="VBox/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Content/CenterPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TargetTitle" type="Label" parent="VBox/Content/CenterPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Марс"
+
+[node name="TargetDesc" type="Label" parent="VBox/Content/CenterPanel/VBox"]
+layout_mode = 2
+autowrap_mode = 2
+text = "Опис цілі"
+
+[node name="TargetSpecs" type="Label" parent="VBox/Content/CenterPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.85, 0.95, 1)
+text = "Характеристики"
+
+[node name="TargetImage" type="TextureRect" parent="VBox/Content/CenterPanel/VBox"]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RightPanel" type="PanelContainer" parent="VBox/Content"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="VBox/Content/RightPanel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LblClass" type="Label" parent="VBox/Content/RightPanel/VBox"]
+layout_mode = 2
+text = "Клас місії NASA:"
+
+[node name="ClassOption" type="OptionButton" parent="VBox/Content/RightPanel/VBox"]
+layout_mode = 2
+
+[node name="LblGoal" type="Label" parent="VBox/Content/RightPanel/VBox"]
+layout_mode = 2
+text = "Наукова мета:"
+
+[node name="GoalOption" type="OptionButton" parent="VBox/Content/RightPanel/VBox"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="VBox/Content/RightPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BtnNext" type="Button" parent="VBox/Content/RightPanel/VBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Перейти до конструктора ->"

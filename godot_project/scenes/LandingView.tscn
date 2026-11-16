@@ -1,0 +1,279 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/LandingView.gd" id="1_landing"]
+[ext_resource type="Script" path="res://scripts/LandingTerrainVisual.gd" id="2_terrain"]
+[ext_resource type="Script" path="res://scripts/LandingCraftVisual.gd" id="3_craft"]
+[ext_resource type="Script" path="res://scripts/NavballVisual.gd" id="4_navball"]
+[ext_resource type="Texture2D" path="res://assets/icons/icon_manual_pilot.svg" id="5_ico_manual"]
+[ext_resource type="Texture2D" path="res://assets/icons/icon_autopilot.svg" id="6_ico_auto"]
+
+[node name="LandingView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_landing")
+
+[node name="FlightArea" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LandingTerrainVisual" type="Node2D" parent="FlightArea"]
+script = ExtResource("2_terrain")
+
+[node name="LanderCraft" type="Node2D" parent="FlightArea"]
+position = Vector2(640, 50)
+
+[node name="LandingCraftVisual" type="Node2D" parent="FlightArea/LanderCraft"]
+script = ExtResource("3_craft")
+
+[node name="HUD" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 450.0
+offset_bottom = 325.0
+
+[node name="VBox" type="VBoxContainer" parent="HUD"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="LblStatus" type="Label" parent="HUD/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.92, 0.55, 1)
+theme_override_font_sizes/font_size = 14
+text = "Посадкова телеметрія номінальна"
+autowrap_mode = 2
+
+[node name="LblModeBadge" type="Label" parent="HUD/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.85, 1.0, 1)
+theme_override_font_sizes/font_size = 12
+text = "РЕЖИМ: ОЧІКУВАННЯ ВИБОРУ"
+
+[node name="HSeparator" type="HSeparator" parent="HUD/VBox"]
+layout_mode = 2
+
+[node name="HBoxNavball" type="HBoxContainer" parent="HUD/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="NavballAnchor" type="Control" parent="HUD/VBox/HBoxNavball"]
+custom_minimum_size = Vector2(85, 80)
+layout_mode = 2
+
+[node name="NavballVisual" type="Node2D" parent="HUD/VBox/HBoxNavball/NavballAnchor"]
+position = Vector2(42, 40)
+script = ExtResource("4_navball")
+
+[node name="VBoxNavStats" type="VBoxContainer" parent="HUD/VBox/HBoxNavball"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="LblPitch" type="Label" parent="HUD/VBox/HBoxNavball/VBoxNavStats"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Кут нахилу: 0.0°"
+
+[node name="LblTWR" type="Label" parent="HUD/VBox/HBoxNavball/VBoxNavStats"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Тяга TWR: 0.00"
+
+[node name="LblAlt" type="Label" parent="HUD/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Радарна висота AGL: 520 м"
+
+[node name="LblVSpeed" type="Label" parent="HUD/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Верт. швидкість: 0.0 м/с"
+
+[node name="LblHSpeed" type="Label" parent="HUD/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Гориз. швидкість: 0.0 м/с"
+
+[node name="LblFuel" type="Label" parent="HUD/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Запас палива: 100%"
+
+[node name="HBoxTouchdownButtons" type="HBoxContainer" parent="HUD/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BtnRetry" type="Button" parent="HUD/VBox/HBoxTouchdownButtons"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
+text = "Спробувати знову"
+
+[node name="BtnNext" type="Button" parent="HUD/VBox/HBoxTouchdownButtons"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
+text = "До операцій ->"
+
+[node name="Controls" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -380.0
+offset_top = -85.0
+offset_right = 380.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="BtnThrustLeft" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(105, 48)
+layout_mode = 2
+text = "<- Нахил (A)"
+
+[node name="BtnThrustUp" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "ТЯГА ДВИГУНА (W)"
+
+[node name="BtnThrustRight" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(105, 48)
+layout_mode = 2
+text = "Нахил (D) ->"
+
+[node name="BtnChute" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(135, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Парашут (Space)"
+
+[node name="BtnToggleMode" type="Button" parent="Controls"]
+custom_minimum_size = Vector2(165, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Автопілот EDL"
+
+[node name="ModeDialog" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -185.0
+offset_right = 350.0
+offset_bottom = 185.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="ModeDialog"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="LblDialogTitle" type="Label" parent="ModeDialog/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1.0, 1.0, 1.0, 1)
+theme_override_font_sizes/font_size = 20
+text = "ВИБІР РЕЖИМУ ПОСАДКИ (EDL)"
+horizontal_alignment = 1
+
+[node name="LblDialogSub" type="Label" parent="ModeDialog/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
+theme_override_font_sizes/font_size = 13
+text = "Визначте, як здійснюватиметься спуск та посадка на поверхню:"
+horizontal_alignment = 1
+
+[node name="HBoxCards" type="HBoxContainer" parent="ModeDialog/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="PanelManual" type="PanelContainer" parent="ModeDialog/VBox/HBoxCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxM" type="VBoxContainer" parent="ModeDialog/VBox/HBoxCards/PanelManual"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="IcoManual" type="TextureRect" parent="ModeDialog/VBox/HBoxCards/PanelManual/VBoxM"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("5_ico_manual")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LblManualTitle" type="Label" parent="ModeDialog/VBox/HBoxCards/PanelManual/VBoxM"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.85, 1.0, 1)
+theme_override_font_sizes/font_size = 15
+text = "РУЧНЕ ПІЛОТУВАННЯ"
+horizontal_alignment = 1
+
+[node name="LblManualDesc" type="Label" parent="ModeDialog/VBox/HBoxCards/PanelManual/VBoxM"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 2
+text = "Повний ручний контроль тяги та кута нахилу (W/A/D чи кнопки).\n\n• Усе залежить виключно від вас!\n• Забезпечте швидкість торкання до 36 м/с та кут до 9°.\n• Немає випадкових збоїв."
+
+[node name="BtnSelectManual" type="Button" parent="ModeDialog/VBox/HBoxCards/PanelManual/VBoxM"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Керувати вручну"
+
+[node name="PanelAuto" type="PanelContainer" parent="ModeDialog/VBox/HBoxCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxA" type="VBoxContainer" parent="ModeDialog/VBox/HBoxCards/PanelAuto"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="IcoAuto" type="TextureRect" parent="ModeDialog/VBox/HBoxCards/PanelAuto/VBoxA"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("6_ico_auto")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LblAutoTitle" type="Label" parent="ModeDialog/VBox/HBoxCards/PanelAuto/VBoxA"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.92, 0.55, 1)
+theme_override_font_sizes/font_size = 15
+text = "АВТОПІЛОТ EDL"
+horizontal_alignment = 1
+
+[node name="LblAutoDesc" type="Label" parent="ModeDialog/VBox/HBoxCards/PanelAuto/VBoxA"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 2
+text = "Бортовий комп'ютер NASA автоматично веде апарат до майданчика.\n\n• Розрахункова надійність: ~88%.\n• Можливі нештатні ситуації (порив бурі, збій висотоміра TRN або клапана)."
+
+[node name="BtnSelectAuto" type="Button" parent="ModeDialog/VBox/HBoxCards/PanelAuto/VBoxA"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Посадка на автопілоті"

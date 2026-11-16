@@ -1,0 +1,137 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/CruiseView.gd" id="1_cruise"]
+[ext_resource type="Script" path="res://scripts/SolarSystemVisual.gd" id="2_solar"]
+
+[node name="CruiseView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cruise")
+
+[node name="Content" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="Control" parent="Content"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 80.0
+offset_right = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SolarSystemVisual" type="Node2D" parent="Content/Center"]
+script = ExtResource("2_solar")
+
+[node name="LeftTelemetry" type="PanelContainer" parent="Content"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 380.0
+offset_bottom = 250.0
+
+[node name="VBox" type="VBoxContainer" parent="Content/LeftTelemetry"]
+layout_mode = 2
+
+[node name="LblTelemetry" type="Label" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+text = "Телеметрія перельоту"
+
+[node name="BottomPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -80.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBoxMain" type="HBoxContainer" parent="BottomPanel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="LblProgress" type="Label" parent="BottomPanel/HBoxMain"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Прогрес перельоту: 0%"
+
+[node name="BarCruise" type="ProgressBar" parent="BottomPanel/HBoxMain"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="BtnArrival" type="Button" parent="BottomPanel/HBoxMain"]
+custom_minimum_size = Vector2(200, 45)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 18
+text = "Прибуття до цілі ->"
+
+[node name="EventPopup" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -310.0
+offset_top = -140.0
+offset_right = 310.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="EventPopup"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LblEventTitle" type="Label" parent="EventPopup/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "ПОДІЯ У ПОЛЬОТІ"
+
+[node name="LblEventDesc" type="Label" parent="EventPopup/VBox"]
+layout_mode = 2
+autowrap_mode = 2
+text = "Опис події"
+
+[node name="LblEventFact" type="Label" parent="EventPopup/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 2
+text = "Історичний факт NASA..."
+
+[node name="HBoxOptions" type="HBoxContainer" parent="EventPopup/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="BtnOpt1" type="Button" parent="EventPopup/VBox/HBoxOptions"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 2
+text = "Варіант 1"
+
+[node name="BtnOpt2" type="Button" parent="EventPopup/VBox/HBoxOptions"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 2
+text = "Варіант 2"

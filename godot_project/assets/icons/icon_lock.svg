@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="shackle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#94a3b8"/>
+      <stop offset="35%" stop-color="#f8fafc"/>
+      <stop offset="70%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+    <linearGradient id="lockBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="40%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <filter id="lockShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <path d="M20 30 V19 C20 11.5 25.5 6 32 6 C38.5 6 44 11.5 44 19 V30" fill="none" stroke="url(#shackle)" stroke-width="6.5" stroke-linecap="round"/>
+  <rect x="12" y="27" width="40" height="32" rx="9" fill="url(#lockBody)" filter="url(#lockShadow)"/>
+  <rect x="14" y="29" width="36" height="28" rx="7" fill="none" stroke="#fef08a" stroke-width="1.2" opacity="0.6"/>
+  <circle cx="32" cy="41" r="4.5" fill="#451a03"/>
+  <path d="M30 43 L29 51 H35 L34 43 Z" fill="#451a03"/>
+  <circle cx="32" cy="41" r="2" fill="#78350f"/>
+  <ellipse cx="22" cy="33" rx="5" ry="2" fill="#ffffff" opacity="0.45"/>
+</svg>

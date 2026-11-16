@@ -1,0 +1,136 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/DebriefView.gd" id="1_debrief"]
+[ext_resource type="Script" path="res://scripts/MissionPatchVisual.gd" id="2_patch"]
+[ext_resource type="Texture2D" path="res://assets/icons/icon_camera.svg" id="3_cam"]
+
+[node name="DebriefView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_debrief")
+
+[node name="Content" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = -24.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+
+[node name="LeftPanel" type="PanelContainer" parent="Content"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Content/LeftPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="LblPatchTitle" type="Label" parent="Content/LeftPanel/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+text = "ОФІЦІЙНА ЕМБЛЕМА МІСІЇ"
+
+[node name="PatchAnchor" type="Control" parent="Content/LeftPanel/VBox"]
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+
+[node name="MissionPatchVisual" type="Node2D" parent="Content/LeftPanel/VBox/PatchAnchor"]
+position = Vector2(200, 90)
+script = ExtResource("2_patch")
+
+[node name="HSeparator" type="HSeparator" parent="Content/LeftPanel/VBox"]
+layout_mode = 2
+
+[node name="HBoxPhotoHeader" type="HBoxContainer" parent="Content/LeftPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="IconCam" type="TextureRect" parent="Content/LeftPanel/VBox/HBoxPhotoHeader"]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+texture = ExtResource("3_cam")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LblPhotoHeader" type="Label" parent="Content/LeftPanel/VBox/HBoxPhotoHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "АРХІВ NASA: РЕАЛЬНИЙ ЗНІМОК"
+
+[node name="PhotoContainer" type="PanelContainer" parent="Content/LeftPanel/VBox"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+
+[node name="NasaPhotoRect" type="TextureRect" parent="Content/LeftPanel/VBox/PhotoContainer"]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="LblPhotoCaption" type="Label" parent="Content/LeftPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+autowrap_mode = 2
+text = "Панорама поверхні"
+
+[node name="LblPhotoCredit" type="Label" parent="Content/LeftPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.65, 0.75, 1)
+theme_override_font_sizes/font_size = 11
+horizontal_alignment = 1
+autowrap_mode = 2
+text = "NASA / JPL-Caltech"
+
+[node name="RightPanel" type="PanelContainer" parent="Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBox" type="VBoxContainer" parent="Content/RightPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="LblScore" type="Label" parent="Content/RightPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 28
+text = "ОЦІНКА МІСІЇ: 100 / 100"
+
+[node name="HSeparator" type="HSeparator" parent="Content/RightPanel/VBox"]
+layout_mode = 2
+
+[node name="LblBreakdown" type="Label" parent="Content/RightPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Деталізація результатів..."
+
+[node name="HSeparator2" type="HSeparator" parent="Content/RightPanel/VBox"]
+layout_mode = 2
+
+[node name="LblComparison" type="Label" parent="Content/RightPanel/VBox"]
+layout_mode = 2
+autowrap_mode = 2
+text = "Порівняння з реальними місіями NASA..."
+
+[node name="Spacer" type="Control" parent="Content/RightPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BtnRestart" type="Button" parent="Content/RightPanel/VBox"]
+custom_minimum_size = Vector2(250, 52)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 18
+text = "Спроектувати нову місію"

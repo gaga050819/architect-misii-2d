@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="emitterGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <radialGradient id="plasmaGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="35%" stop-color="#38bdf8"/>
+      <stop offset="70%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#4f46e5" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadowLaser">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <path d="M12 18 L32 10 L32 26 Z" fill="url(#emitterGrad)" filter="url(#shadowLaser)"/>
+  <rect x="8" y="16" width="6" height="12" rx="2" fill="#334155"/>
+  <circle cx="32" cy="18" r="4" fill="#38bdf8"/>
+  <circle cx="32" cy="18" r="2" fill="#ffffff"/>
+  <line x1="34" y1="18" x2="54" y2="48" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+  <line x1="34" y1="18" x2="54" y2="48" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="54" cy="48" r="10" fill="url(#plasmaGlow)"/>
+  <path d="M54 36 L54 60 M42 48 L66 48" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M46 40 L62 56 M46 56 L62 40" stroke="#a855f7" stroke-width="1.2" stroke-linecap="round"/>
+  <circle cx="48" cy="42" r="1.5" fill="#38bdf8"/>
+  <circle cx="60" cy="45" r="1.2" fill="#38bdf8"/>
+  <circle cx="58" cy="55" r="1.5" fill="#6366f1"/>
+</svg>

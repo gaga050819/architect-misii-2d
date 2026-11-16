@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="centerPulse" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="60%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </radialGradient>
+    <filter id="shadowSignal">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <circle cx="32" cy="46" r="6" fill="url(#centerPulse)" filter="url(#shadowSignal)"/>
+  <circle cx="32" cy="46" r="3" fill="#ffffff"/>
+  <path d="M22 36 A14 14 0 0 1 42 36" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M15 26 A24 24 0 0 1 49 26" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  <path d="M8 16 A34 34 0 0 1 56 16" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  <path d="M2 6 A44 44 0 0 1 62 6" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" opacity="0.3"/>
+</svg>
