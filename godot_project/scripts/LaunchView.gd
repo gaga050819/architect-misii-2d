@@ -54,9 +54,26 @@ func _init_window_panel() -> void:
 	slider_offset.value = 0.0
 	slider_offset.value_changed.connect(_on_slider_changed)
 	_update_window_status(0)
+	var bar_ctrl = Control.new()
+	bar_ctrl.name = "WindowBarControl"
+	bar_ctrl.custom_minimum_size = Vector2(0, 44)
+	bar_ctrl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var vbox_win = window_panel.get_node("VBox")
+	vbox_win.add_child(bar_ctrl)
+	vbox_win.move_child(bar_ctrl, 2)
+	bar_ctrl.draw.connect(_on_window_bar_draw.bind(bar_ctrl))
+	bar_ctrl.set_script(null)
+
+func _draw_window_bar() -> void:
+	var ctrl = window_panel.get_node_or_null("VBox/WindowBarControl")
+	if ctrl:
+		ctrl.queue_redraw()
 
 func _on_slider_changed(val: float) -> void:
 	_update_window_status(int(val))
+	var bar = window_panel.get_node_or_null("VBox/WindowBarControl")
+	if bar:
+		bar.queue_redraw()
 
 func _update_window_status(off: int) -> void:
 	if off == 0:
@@ -71,6 +88,40 @@ func _update_window_status(off: int) -> void:
 		lbl_offset_val.text = "Дата старту: %s%d діб від оптимуму" % ["+" if off > 0 else "", off]
 		lbl_window_status.text = "Неоптимальне вікно (+%d%% dV). Високий ризик дефіциту палива!" % [abs(off) * 2]
 		lbl_window_status.modulate = ThemeManager.accent_red
+
+func _on_window_bar_draw(ctrl: Control) -> void:
+	var w = ctrl.size.x
+	if w < 10:
+		return
+	var h = ctrl.size.y
+	var total_days = 60
+	var cell_w = w / float(total_days)
+	var cur_off = int(slider_offset.value)
+	for d in range(total_days):
+		var day_off = d - 30
+		var cell_x = d * cell_w
+		var col: Color
+		if abs(day_off) == 0:
+			col = Color(0.18, 0.94, 0.58, 0.95)
+		elif abs(day_off) <= 5:
+			col = Color(0.18, 0.94, 0.58, 0.60)
+		elif abs(day_off) <= 10:
+			col = Color(1.0, 0.74, 0.20, 0.75)
+		elif abs(day_off) <= 20:
+			col = Color(1.0, 0.50, 0.20, 0.70)
+		else:
+			col = Color(1.0, 0.36, 0.36, 0.60)
+		ctrl.draw_rect(Rect2(cell_x + 1, 2, cell_w - 2, h - 10), col, true, 1.0)
+		ctrl.draw_rect(Rect2(cell_x + 1, 2, cell_w - 2, h - 10), Color(0, 0, 0, 0.18), false, 1.0)
+	var sel_d = cur_off + 30
+	var sel_x = sel_d * cell_w
+	ctrl.draw_rect(Rect2(sel_x, 0, cell_w, h - 2), Color(1, 1, 1, 0.95), false, 2.5)
+	ctrl.draw_rect(Rect2(sel_x + 2, 2, cell_w - 4, h - 6), Color(1, 1, 1, 0.22), true, 1.0)
+	var label_positions = [-30, -15, 0, 15, 30]
+	for lp in label_positions:
+		var lx = (lp + 30) * cell_w + cell_w * 0.5
+		var ltext = "T%+d" % lp if lp != 0 else "T-0"
+		ctrl.draw_string(ctrl.get_theme_default_font(), Vector2(lx - 12, h - 1), ltext, HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(1, 1, 1, 0.75))
 
 func update_pad_alignment() -> void:
 	var rect = flight_area.get_viewport_rect()

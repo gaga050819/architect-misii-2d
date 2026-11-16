@@ -19,6 +19,10 @@ func _draw() -> void:
 	var hover = sin(anim_time * 1.8) * 3.5 if plat_type == "orbiter" else 0.0
 	var center = Vector2(0, hover)
 
+	if GameState.target_id == "interstellar" or str(platform.get("id")) == "voyager_bus":
+		draw_voyager_spacecraft(center, s)
+		return
+
 	var foil_base = Color(0.95, 0.82, 0.35)
 	var foil_shade = Color(0.72, 0.56, 0.18)
 	var foil_highlight = Color(1.0, 0.94, 0.65)
@@ -394,41 +398,132 @@ func draw_wheel_textured(pos: Vector2, radius: float) -> void:
 	draw_circle(pos, 1.5, Color.WHITE)
 
 func draw_dish_textured(center: Vector2, radius: float, metal_col: Color, dark_col: Color) -> void:
-	var tilt = sin(anim_time * 0.4) * 8.0 * PI / 180.0
+	var tilt = sin(anim_time * 0.8) * 14.0 * PI / 180.0
 	var arc_start = PI * 0.85 + tilt
 	var arc_end = PI * 2.15 + tilt
 
-	draw_arc(center, radius, arc_start, arc_end, 48, Color(0.92, 0.95, 0.98), 4.0)
-	draw_arc(center, radius * 0.70, arc_start, arc_end, 36, Color(0.75, 0.80, 0.88), 2.0)
-	draw_arc(center, radius * 0.40, arc_start, arc_end, 24, Color(0.60, 0.65, 0.75), 1.5)
-	draw_arc(center, radius - 2.0, arc_start, arc_end, 48, Color(0.7, 0.75, 0.82), 1.5)
+	var mast_base = center + Vector2(0, 16.0)
+	var mast_mid = center + Vector2(0, 4.0)
+	draw_line(mast_base, mast_mid, Color(0.25, 0.28, 0.35), 5.0)
+	draw_circle(mast_mid, 4.5, metal_col)
+	draw_circle(mast_mid, 2.5, dark_col)
+
+	var dish_pts: PackedVector2Array = []
+	var seg_count = 24
+	for i in range(seg_count + 1):
+		var t = float(i) / float(seg_count)
+		var a = lerp(arc_start, arc_end, t)
+		dish_pts.append(center + Vector2(cos(a), sin(a)) * radius)
+
+	var inner_pts: PackedVector2Array = []
+	for i in range(seg_count, -1, -1):
+		var t = float(i) / float(seg_count)
+		var a = lerp(arc_start, arc_end, t)
+		inner_pts.append(center + Vector2(cos(a), sin(a)) * (radius * 0.75))
+
+	var solid_dish = dish_pts + inner_pts
+	draw_colored_polygon(solid_dish, Color(0.20, 0.24, 0.30))
+	draw_polyline(dish_pts, Color(0.95, 0.98, 1.0), 3.0)
+	draw_polyline(inner_pts, Color(0.70, 0.78, 0.88), 1.8)
 
 	var rim_left = center + Vector2(cos(arc_start), sin(arc_start)) * radius
 	var rim_right = center + Vector2(cos(arc_end), sin(arc_end)) * radius
-	var horn_pos = center + Vector2(0, -radius * 0.55)
+	var horn_dir = Vector2(cos((arc_start + arc_end) * 0.5), sin((arc_start + arc_end) * 0.5))
+	var horn_pos = center - horn_dir * (radius * 0.65)
 
-	draw_line(rim_left, horn_pos, Color(0.6, 0.65, 0.72), 1.5)
-	draw_line(rim_right, horn_pos, Color(0.6, 0.65, 0.72), 1.5)
-	var rim_top = center + Vector2(cos((arc_start + arc_end) * 0.5), sin((arc_start + arc_end) * 0.5)) * radius
-	draw_line(rim_top, horn_pos, Color(0.6, 0.65, 0.72), 1.5)
-
-	var feedhorn_poly = PackedVector2Array([
-		horn_pos + Vector2(-3.0, 0),
-		horn_pos + Vector2(3.0, 0),
-		horn_pos + Vector2(5.0, 10.0),
-		horn_pos + Vector2(-5.0, 10.0)
-	])
-	draw_polygon(feedhorn_poly, [Color(0.20, 0.22, 0.28)])
-	draw_polyline(feedhorn_poly, Color(0.45, 0.50, 0.58), 1.0)
-
-	draw_line(center, Vector2(center.x, center.y + 14.0), metal_col, 4.0)
-	draw_circle(horn_pos, 4.0, Color(0.2, 0.85, 1.0))
+	draw_line(rim_left, horn_pos, Color(0.55, 0.62, 0.72), 1.5)
+	draw_line(rim_right, horn_pos, Color(0.55, 0.62, 0.72), 1.5)
+	draw_circle(horn_pos, 4.5, Color(0.18, 0.92, 1.0))
 	draw_circle(horn_pos, 2.0, Color.WHITE)
 
-	for rw in range(3):
-		var rw_phase = fmod(anim_time * 1.6 + float(rw) * 0.33, 1.0)
-		var wave_r = 14.0 + rw_phase * 38.0
-		var wave_a = (1.0 - rw_phase) * 0.6
+	for rw in range(4):
+		var rw_phase = fmod(anim_time * 2.2 + float(rw) * 0.25, 1.0)
+		var wave_r = 10.0 + rw_phase * 42.0
+		var wave_a = (1.0 - rw_phase) * 0.7
 		var w_start = arc_start + 0.3
 		var w_end = arc_end - 0.3
-		draw_arc(horn_pos, wave_r, w_start, w_end, 20, Color(0.25, 0.85, 1.0, wave_a), 1.6)
+		draw_arc(horn_pos, wave_r, w_start, w_end, 20, Color(0.2, 0.9, 1.0, wave_a), 2.0)
+
+func draw_voyager_spacecraft(center: Vector2, s: float) -> void:
+	var float_y = sin(anim_time * 1.5) * 4.0
+	var c = center + Vector2(0, float_y)
+
+	var dish_r = 38.0 * s
+	var dish_c = c + Vector2(0, -6.0 * s)
+	draw_circle(dish_c, dish_r, Color(0.94, 0.96, 0.98))
+	draw_circle(dish_c, dish_r * 0.85, Color(0.88, 0.91, 0.95))
+	draw_circle(dish_c, dish_r * 0.55, Color(0.78, 0.82, 0.88))
+	draw_arc(dish_c, dish_r, 0, TAU, 48, Color(0.65, 0.70, 0.78), 2.0)
+
+	var sub_r = 7.0 * s
+	draw_circle(dish_c, sub_r, Color(0.25, 0.28, 0.35))
+	draw_circle(dish_c, sub_r * 0.6, Color(1.0, 0.82, 0.25))
+
+	for i in range(3):
+		var a = i * TAU / 3.0 + anim_time * 0.05
+		var tip = dish_c + Vector2(cos(a), sin(a)) * (dish_r * 0.92)
+		draw_line(dish_c, tip, Color(0.35, 0.40, 0.48), 1.5)
+
+	var bus_w = 42.0 * s
+	var bus_h = 24.0 * s
+	var bus_rect = Rect2(c.x - bus_w * 0.5, c.y + 12.0 * s, bus_w, bus_h)
+	draw_rect(bus_rect, Color(0.88, 0.72, 0.25))
+	draw_rect(Rect2(bus_rect.position.x, bus_rect.position.y, bus_w * 0.3, bus_h), Color(1.0, 0.85, 0.45, 0.3))
+	draw_rect(bus_rect, Color(0.35, 0.28, 0.10), false, 2.0)
+
+	for b in range(5):
+		var bx = bus_rect.position.x + b * (bus_w / 4.0)
+		draw_line(Vector2(bx, bus_rect.position.y), Vector2(bx, bus_rect.position.y + bus_h), Color(0.55, 0.42, 0.15, 0.6), 1.2)
+
+	var rec_c = c + Vector2(-9.0 * s, 24.0 * s)
+	var rec_r = 10.5 * s
+	draw_circle(rec_c, rec_r, Color(0.98, 0.82, 0.22))
+	draw_circle(rec_c, rec_r * 0.8, Color(0.82, 0.68, 0.18))
+	draw_circle(rec_c, rec_r * 0.25, Color(0.2, 0.18, 0.12))
+	draw_arc(rec_c, rec_r, 0, TAU, 32, Color(1.0, 0.95, 0.6), 1.5)
+	for i in range(6):
+		var ra = i * TAU / 6.0
+		draw_line(rec_c, rec_c + Vector2(cos(ra), sin(ra)) * (rec_r * 0.75), Color(0.55, 0.45, 0.12, 0.8), 1.0)
+
+	var mag_start = c + Vector2(-bus_w * 0.5, 18.0 * s)
+	var mag_end = mag_start + Vector2(-85.0 * s, 10.0 * s)
+	draw_line(mag_start, mag_end, Color(0.70, 0.75, 0.82), 2.0)
+	var mag_top = mag_start + Vector2(0, -4.0 * s)
+	var mag_top_end = mag_end + Vector2(0, -4.0 * s)
+	draw_line(mag_top, mag_top_end, Color(0.70, 0.75, 0.82), 1.5)
+	for i in range(8):
+		var t = float(i) / 7.0
+		var p1 = mag_start.lerp(mag_end, t)
+		var p2 = mag_top.lerp(mag_top_end, t)
+		draw_line(p1, p2, Color(0.5, 0.55, 0.65), 1.2)
+	draw_rect(Rect2(mag_end.x - 5.0 * s, mag_end.y - 7.0 * s, 10.0 * s, 6.0 * s), Color(0.9, 0.92, 0.95))
+	var mag_mid = mag_start.lerp(mag_end, 0.5)
+	draw_rect(Rect2(mag_mid.x - 4.0 * s, mag_mid.y - 6.0 * s, 8.0 * s, 5.0 * s), Color(0.9, 0.92, 0.95))
+
+	var rtg_start = c + Vector2(bus_w * 0.5, 22.0 * s)
+	var rtg_end = rtg_start + Vector2(48.0 * s, 18.0 * s)
+	draw_line(rtg_start, rtg_end, Color(0.45, 0.50, 0.58), 3.0)
+	for r in range(3):
+		var rp = rtg_start.lerp(rtg_end, 0.35 + r * 0.28)
+		var rtg_box = Rect2(rp.x - 5.0 * s, rp.y - 10.0 * s, 10.0 * s, 20.0 * s)
+		draw_rect(rtg_box, Color(0.22, 0.24, 0.28))
+		draw_rect(rtg_box, Color(0.45, 0.50, 0.58), false, 1.2)
+		draw_circle(rp, 2.5 * s, Color(1.0, 0.45, 0.15, 0.85))
+
+	var scan_start = c + Vector2(bus_w * 0.45, 12.0 * s)
+	var scan_end = scan_start + Vector2(38.0 * s, -22.0 * s)
+	draw_line(scan_start, scan_end, Color(0.55, 0.60, 0.70), 2.5)
+	var plat_box = Rect2(scan_end.x - 8.0 * s, scan_end.y - 8.0 * s, 16.0 * s, 16.0 * s)
+	draw_rect(plat_box, Color(0.28, 0.32, 0.38))
+	draw_rect(plat_box, Color(0.65, 0.72, 0.82), false, 1.5)
+	draw_rect(Rect2(scan_end.x + 8.0 * s, scan_end.y - 6.0 * s, 12.0 * s, 5.0 * s), Color(0.12, 0.14, 0.18))
+	draw_rect(Rect2(scan_end.x + 8.0 * s, scan_end.y + 1.0 * s, 10.0 * s, 6.0 * s), Color(0.12, 0.14, 0.18))
+
+	draw_line(c + Vector2(-15.0 * s, 36.0 * s), c + Vector2(-65.0 * s, 85.0 * s), Color(0.85, 0.90, 0.98), 1.0)
+	draw_line(c + Vector2(15.0 * s, 36.0 * s), c + Vector2(65.0 * s, 85.0 * s), Color(0.85, 0.90, 0.98), 1.0)
+
+	for pw in range(3):
+		var phase = fmod(anim_time * 1.8 + float(pw) * 0.33, 1.0)
+		var rad = sub_r + phase * 45.0 * s
+		var alpha = (1.0 - phase) * 0.65
+		draw_arc(dish_c, rad, PI * 1.05, PI * 1.95, 24, Color(0.0, 0.9, 1.0, alpha), 2.0)

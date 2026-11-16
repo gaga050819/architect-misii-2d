@@ -92,10 +92,10 @@ func update_category_buttons() -> void:
 			sb.set_border_width_all(1)
 			btn.add_theme_color_override("font_color", ThemeManager.accent_emerald)
 		else:
-			sb.bg_color = Color(1, 1, 1, 0.05) if not is_light else Color(0, 0, 0, 0.04)
-			sb.border_color = Color(1, 1, 1, 0.1)
+			sb.bg_color = Color(1, 1, 1, 0.05) if not is_light else Color(0.68, 0.76, 0.88, 0.35)
+			sb.border_color = Color(1, 1, 1, 0.1) if not is_light else Color(0.28, 0.40, 0.60, 0.50)
 			sb.set_border_width_all(1)
-			btn.add_theme_color_override("font_color", text_col * Color(1, 1, 1, 0.75))
+			btn.add_theme_color_override("font_color", text_col)
 
 		btn.add_theme_stylebox_override("normal", sb)
 

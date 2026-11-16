@@ -224,5 +224,43 @@
         "https://en.wikipedia.org/wiki/Antares_(rocket)"
       ]
     }
+  },
+  {
+    "id": "titan_iiie",
+    "name": {
+      "uk": "Titan IIIE / Centaur",
+      "en": "Titan IIIE / Centaur"
+    },
+    "maker": "Martin Marietta / NASA",
+    "leo_kg": 15400,
+    "to_kg": {
+      "interstellar": 1200,
+      "mars": 3800,
+      "europa": 1800,
+      "asteroid": 2200
+    },
+    "cost_musd": 80,
+    "flights": 7,
+    "successes": 6,
+    "note": {
+      "uk": "Історична ракета NASA, яка запустила Voyager 1, Voyager 2, Viking 1 та Viking 2. Оснащена двома масивними твердопаливними прискорювачами SRM та водневим ступенем Centaur D-1T.",
+      "en": "Historic NASA launch vehicle that launched Voyager 1, Voyager 2, Viking 1 and Viking 2."
+    },
+    "source": "https://en.wikipedia.org/wiki/Titan_IIIE",
+    "simplified": "історична вартість з урахуванням інфляції; розміри округлені для малюнка",
+    "visual": {
+      "height_m": 48.8,
+      "core_d_m": 3.05,
+      "s1_h_m": 24.0,
+      "fairing_d_m": 4.27,
+      "fairing_h_m": 12.0,
+      "core_color": "#333830",
+      "interstage": "#efefea",
+      "boosters": 2,
+      "booster_type": "srb",
+      "booster_h_m": 25.9,
+      "booster_d_m": 3.05,
+      "booster_color": "#e2e4e6"
+    }
   }
 ]

@@ -136,6 +136,25 @@ func get_rocket_config() -> Dictionary:
 		cfg["nozzle_count"] = 2
 		cfg["plume_type"] = "kerosene"
 		cfg["is_ukrainian"] = true
+	elif r_id == "titan_iiie":
+		cfg["w"] = 24.0
+		cfg["h_s1"] = 108.0
+		cfg["h_s2"] = 38.0
+		cfg["h_f"] = 62.0
+		cfg["f_w"] = 18.0
+		cfg["core_col"] = Color(0.26, 0.30, 0.24)
+		cfg["inter_col"] = Color(0.92, 0.94, 0.96)
+		cfg["inter_h"] = 16.0
+		cfg["s2_col"] = Color(0.95, 0.96, 0.98)
+		cfg["boosters"] = 2
+		cfg["booster_type"] = "srb"
+		cfg["booster_w"] = 15.0
+		cfg["booster_h"] = 114.0
+		cfg["booster_col"] = Color(0.92, 0.93, 0.95)
+		cfg["has_fins"] = false
+		cfg["has_legs"] = false
+		cfg["nozzle_count"] = 2
+		cfg["plume_type"] = "titan"
 	return cfg
 
 func _draw() -> void:
@@ -187,11 +206,13 @@ func draw_engine_plumes(cfg: Dictionary, origin: Vector2, width_base: float, pow
 		draw_single_core_plume(origin + Vector2(-bw - 2.0, 0), width_base * 0.9, power, vac_blend, "kerosene")
 		draw_single_core_plume(origin + Vector2(bw + 2.0, 0), width_base * 0.9, power, vac_blend, "kerosene")
 		draw_single_core_plume(origin, width_base, power, vac_blend, "kerosene")
-	elif (p_type == "atlas" or p_type == "vulcan") and staging_stage == 0:
+	elif (p_type == "atlas" or p_type == "vulcan" or p_type == "titan") and staging_stage == 0:
 		var w = cfg["w"]
-		draw_srb_plume(origin + Vector2(-w * 0.5 - 6.0, 0), 10.0, power)
-		draw_srb_plume(origin + Vector2(w * 0.5 + 6.0, 0), 10.0, power)
-		draw_single_core_plume(origin, width_base, power, vac_blend, p_type)
+		var srb_w = 14.0 if p_type == "titan" else 10.0
+		var srb_offset = (w * 0.5 + 10.0) if p_type == "titan" else (w * 0.5 + 6.0)
+		draw_srb_plume(origin + Vector2(-srb_offset, 0), srb_w, power)
+		draw_srb_plume(origin + Vector2(srb_offset, 0), srb_w, power)
+		draw_single_core_plume(origin, width_base, power, vac_blend, "kerosene" if p_type == "titan" else p_type)
 	else:
 		draw_single_core_plume(origin, width_base, power, vac_blend, p_type)
 
@@ -580,12 +601,22 @@ func draw_side_boosters(cfg: Dictionary, alpha: float = 1.0) -> void:
 			Vector2(right_x, by + booster_r_pos.y - 14.0)
 		]), [b_col])
 		draw_rect(right_rect, Color(0.2, 0.22, 0.26, alpha), false, 1.2)
-		draw_polygon(PackedVector2Array([
-			Vector2(right_x + 1.0, by + bh + booster_r_pos.y),
-			Vector2(right_x + bw - 1.0, by + bh + booster_r_pos.y),
-			Vector2(right_x + bw + 1.0, by + bh + booster_r_pos.y + 6.0),
-			Vector2(right_x - 1.0, by + bh + booster_r_pos.y + 6.0)
-		]), [Color(0.18, 0.20, 0.24, alpha)])
+		if r_id == "titan_iiie":
+			for seg in range(5):
+				var sy = by + booster_l_pos.y + seg * (bh / 5.0)
+				draw_line(Vector2(left_x, sy), Vector2(left_x + bw, sy), Color(0.2, 0.22, 0.25, 0.7 * alpha), 1.5)
+				var rsy = by + booster_r_pos.y + seg * (bh / 5.0)
+				draw_line(Vector2(right_x, rsy), Vector2(right_x + bw, rsy), Color(0.2, 0.22, 0.25, 0.7 * alpha), 1.5)
+			draw_polygon(PackedVector2Array([
+				Vector2(left_x, by + booster_l_pos.y),
+				Vector2(left_x + bw, by + booster_l_pos.y),
+				Vector2(left_x + bw, by + booster_l_pos.y - 14.0)
+			]), [Color(0.12, 0.14, 0.18, alpha)])
+			draw_polygon(PackedVector2Array([
+				Vector2(right_x, by + booster_r_pos.y),
+				Vector2(right_x + bw, by + booster_r_pos.y),
+				Vector2(right_x, by + booster_r_pos.y - 14.0)
+			]), [Color(0.12, 0.14, 0.18, alpha)])
 
 func draw_second_stage(cfg: Dictionary, top_y: float) -> void:
 	var w = cfg["w"]

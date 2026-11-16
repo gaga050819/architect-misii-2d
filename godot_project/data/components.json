@@ -158,6 +158,25 @@
           "https://en.wikipedia.org/wiki/OSIRIS-REx"
         ]
       }
+    },
+    {
+      "id": "voyager_bus",
+      "type": "orbiter",
+      "name": {
+        "uk": "Глибококосмічна платформа Voyager",
+        "en": "Voyager Deep Space Bus"
+      },
+      "prototype": "Voyager 1 & 2 (JPL / NASA)",
+      "mass_kg": 721,
+      "cost_musd": 250,
+      "bus_power_w": 180,
+      "slots": 6,
+      "reliability": 0.998,
+      "ops_musd_per_step": 15,
+      "summary": {
+        "uk": "Легендарна 10-гранна шина зонда Voyager з 3.7-м антеною HGA, 13-м магнітометричною стрілою, 3 РІТЕГами MHW-RTG та Золотою пластинкою.",
+        "en": "Legendary 10-sided Voyager bus with 3.7m HGA dish, 13m MAG boom, 3 MHW-RTGs, and Golden Record."
+      }
     }
   ],
   "instruments": [

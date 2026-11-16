@@ -78,9 +78,38 @@ func display_real_nasa_photo() -> void:
 
 func calculate_final_results() -> void:
 	var stats = GameState.get_current_stats()
+
 	var base_science = stats.get("potential_science", 50.0)
-	var final_science = base_science + GameState.collected_science - GameState.landing_damage
-	var final_score_val = int(clamp(final_science, 10.0, 100.0))
+	var max_science = max(1.0, base_science)
+	var total_science = base_science + GameState.collected_science - GameState.landing_damage
+	var science_score = clamp(total_science / max_science * 100.0, 0.0, 100.0)
+
+	var cost = stats.get("total_cost_musd", 0.0)
+	var budget = max(1.0, stats.get("budget_limit_musd", 1150.0))
+	var budget_score = clamp((1.0 - cost / budget) * 100.0 + 50.0, 0.0, 100.0)
+
+	var launch_m = stats.get("launch_mass_kg", 1.0)
+	var cap_m = max(1.0, stats.get("capacity_kg", 1.0))
+	var mass_efficiency = clamp((1.0 - launch_m / cap_m) * 100.0 + 40.0, 0.0, 100.0)
+
+	var reliability = stats.get("reliability", 0.90)
+	var reliability_score = clamp(reliability * 100.0, 0.0, 100.0)
+
+	var win_off = abs(GameState.launch_window_offset)
+	var window_score = clamp(100.0 - win_off * 3.0, 0.0, 100.0)
+
+	var total_ev = max(1, GameState.total_decisions)
+	var events_score = clamp(float(GameState.correct_decisions) / float(total_ev) * 100.0, 0.0, 100.0)
+
+	var final_score_val = int(clamp(
+		science_score * 0.30 +
+		budget_score * 0.15 +
+		mass_efficiency * 0.15 +
+		reliability_score * 0.20 +
+		window_score * 0.10 +
+		events_score * 0.10,
+		5.0, 100.0
+	))
 	GameState.final_score = final_score_val
 
 	lbl_score.text = "ОЦІНКА МІСІЇ: %d / 100" % [final_score_val]
@@ -92,16 +121,18 @@ func calculate_final_results() -> void:
 		lbl_score.modulate = ThemeManager.accent_red
 
 	var b_text = "Деталізація результатів інженерної оцінки:\n\n"
-	b_text += "• Науковий потенціал приладів: +%d\n" % [int(base_science)]
-	b_text += "• Зібрано польових зразків: +%d\n" % [int(GameState.collected_science)]
-	if GameState.landing_damage > 0:
-		b_text += "• Штраф за пошкодження при посадці: -%d\n" % [int(GameState.landing_damage)]
-	b_text += "• Бюджетна ефективність: 100%\n"
-	b_text += "• Інженерний запас маси ракети: %.1f%%\n" % [stats.get("mass_reserve_pct", 0.2) * 100.0]
-	if GameState.launch_window_offset != 0:
-		b_text += "• Зміщення вікна старту: %d діб\n" % [GameState.launch_window_offset]
+	b_text += "Наука (вага 30%%): %d / 100 -> +%d\n" % [int(science_score), int(science_score * 0.30)]
+	b_text += "Бюджет (вага 15%%): %d / 100 -> +%d\n" % [int(budget_score), int(budget_score * 0.15)]
+	b_text += "Маса (вага 15%%): %d / 100 -> +%d\n" % [int(mass_efficiency), int(mass_efficiency * 0.15)]
+	b_text += "Надійн. (вага 20%%): %d / 100 -> +%d\n" % [int(reliability_score), int(reliability_score * 0.20)]
+	b_text += "Вікно (вага 10%%): %d / 100 -> +%d\n" % [int(window_score), int(window_score * 0.10)]
+	b_text += "Рішення (вага 10%%): %d / 100 -> +%d\n" % [int(events_score), int(events_score * 0.10)]
+	b_text += "\nПідсумок: %d балів" % [final_score_val]
 	lbl_breakdown.text = b_text
 
+	_build_comparison_text(final_score_val)
+
+func _build_comparison_text(score: int) -> void:
 	var comp_text = "Порівняння з реальними історичними місіями NASA:\n\n"
 	if GameState.target_id == "mars":
 		comp_text += "Ваша місія досягла результатів, порівнянних з марсоходом Perseverance (NASA, 2020) та науковою лабораторією Curiosity."

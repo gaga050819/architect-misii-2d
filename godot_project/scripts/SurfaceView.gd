@@ -218,6 +218,10 @@ func _on_sample_pressed() -> void:
 				fx_visual.start_drill(origin_pt, target_pt)
 				SoundManager.play_drill()
 				lbl_target_hint.text = "Алмазне буріння: забір керна породи в герметичний контейнер..."
+			elif method == "micro":
+				fx_visual.start_microscopic(origin_pt)
+				SoundManager.play_click()
+				lbl_target_hint.text = "Мікроскопічний аналіз: фотографування структури породи на рівні мкм..."
 			else:
 				fx_visual.start_scoop(origin_pt, target_pt)
 				SoundManager.play_click()

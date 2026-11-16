@@ -99,15 +99,19 @@ func update_phase_buttons() -> void:
 				sb.shadow_size = 6
 				btn.add_theme_color_override("font_color", Color(0.18, 0.94, 0.58, 1.0))
 			elif is_past:
-				sb.bg_color = Color(0.0, 0.85, 1.0, 0.10)
-				sb.border_color = Color(0.0, 0.85, 1.0, 0.45)
+				var past_bg = Color(0.0, 0.85, 1.0, 0.10) if ThemeManager.theme_value <= 0.5 else Color(0.0, 0.40, 0.70, 0.18)
+				var past_border = Color(0.0, 0.85, 1.0, 0.45) if ThemeManager.theme_value <= 0.5 else Color(0.0, 0.32, 0.65, 0.65)
+				var past_text = Color(0.0, 0.85, 1.0, 0.95) if ThemeManager.theme_value <= 0.5 else Color(0.0, 0.25, 0.60, 1.0)
+				sb.bg_color = past_bg
+				sb.border_color = past_border
 				sb.set_border_width_all(1)
-				btn.add_theme_color_override("font_color", Color(0.0, 0.85, 1.0, 0.95))
+				btn.add_theme_color_override("font_color", past_text)
 			else:
-				sb.bg_color = Color(0.08, 0.12, 0.18, 0.25)
-				sb.border_color = Color(0.3, 0.4, 0.55, 0.25)
+				var is_light_mode = ThemeManager.theme_value > 0.5
+				sb.bg_color = Color(0.08, 0.12, 0.18, 0.25) if not is_light_mode else Color(0.70, 0.78, 0.90, 0.30)
+				sb.border_color = Color(0.3, 0.4, 0.55, 0.25) if not is_light_mode else Color(0.30, 0.42, 0.60, 0.40)
 				sb.set_border_width_all(1)
-				btn.add_theme_color_override("font_color", text_col * Color(1, 1, 1, 0.6))
+				btn.add_theme_color_override("font_color", text_col * Color(1, 1, 1, 0.75))
 			btn.add_theme_stylebox_override("normal", sb)
 
 func _on_nav_button_pressed(target_phase: String) -> void:

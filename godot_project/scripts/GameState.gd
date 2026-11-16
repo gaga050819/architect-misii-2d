@@ -16,6 +16,8 @@ var current_phase: String = "briefing"
 
 var final_score: int = 0
 var collected_science: float = 0.0
+var total_decisions: int = 0
+var correct_decisions: int = 0
 var landing_damage: float = 0.0
 var flight_events_log: Array = []
 var launch_window_offset: int = 0
@@ -36,6 +38,8 @@ func reset_mission() -> void:
 	current_phase = "briefing"
 	final_score = 0
 	collected_science = 0.0
+	total_decisions = 0
+	correct_decisions = 0
 	landing_damage = 0.0
 	launch_window_offset = 0
 	flight_events_log.clear()

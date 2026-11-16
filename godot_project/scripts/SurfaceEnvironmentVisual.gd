@@ -10,11 +10,14 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	var target_id = GameState.target_id
-	var w = 1280.0
-	var h = 720.0
+	var vp = get_viewport_rect().size
+	var w = max(2560.0, vp.x)
+	var h = max(1440.0, vp.y)
 	var ground_y = 540.0
 
-	if is_orbit:
+	if target_id == "interstellar":
+		draw_interstellar_space_environment(w, h)
+	elif is_orbit:
 		draw_orbital_environment(target_id, w, h)
 	else:
 		draw_sky_and_space(target_id, w, ground_y)
@@ -23,7 +26,43 @@ func _draw() -> void:
 		draw_foreground_surface(target_id, w, ground_y, h)
 		draw_dust_haze(target_id, w, ground_y)
 		draw_sample_rocks(target_id, ground_y)
-		draw_dsn_antenna(Vector2(1080.0, ground_y), ground_y)
+
+func draw_interstellar_space_environment(w: float, h: float) -> void:
+	draw_rect(Rect2(0, 0, w, h), Color(0.01, 0.012, 0.025))
+
+	for c in range(6):
+		var cx = fmod(c * 380.0 + anim_time * 5.0, w)
+		var cy = 180.0 + sin(c * 1.5 + anim_time * 0.2) * 90.0
+		var c_col = Color(0.12, 0.05, 0.25, 0.12) if c % 2 == 0 else Color(0.02, 0.15, 0.28, 0.10)
+		draw_circle(Vector2(cx, cy), 180.0, c_col)
+
+	for s in range(120):
+		var sx = fmod(s * 79.3, w)
+		var sy = fmod(s * 47.9, h)
+		var sa = 0.35 + sin(s * 4.2 + anim_time * 2.5) * 0.3
+		var col = Color(1.0, 1.0, 1.0, clamp(sa, 0.1, 0.95))
+		if s % 3 == 0:
+			col = Color(0.7, 0.85, 1.0, clamp(sa, 0.1, 0.95))
+		elif s % 5 == 0:
+			col = Color(1.0, 0.9, 0.7, clamp(sa, 0.1, 0.95))
+		draw_circle(Vector2(sx, sy), 1.2 + fmod(s, 1.5), col)
+
+	var wave_pts: PackedVector2Array = []
+	var wave_pts_glow: PackedVector2Array = []
+	for x_i in range(int(w / 40.0) + 2):
+		var px = x_i * 40.0
+		var py = 480.0 + sin(px * 0.005 + anim_time * 0.6) * 35.0 + cos(px * 0.012 - anim_time * 0.4) * 18.0
+		wave_pts.append(Vector2(px, py))
+		wave_pts_glow.append(Vector2(px, py))
+
+	draw_polyline(wave_pts, Color(0.15, 0.65, 1.0, 0.45), 6.0)
+	draw_polyline(wave_pts, Color(0.4, 0.85, 1.0, 0.85), 2.0)
+
+	var ray_t = fmod(anim_time * 3.0, 1.0)
+	var ray_start = Vector2(w * 0.3 + anim_time * 80.0, 150.0)
+	ray_start.x = fmod(ray_start.x, w)
+	var ray_end = ray_start + Vector2(160.0, 90.0)
+	draw_line(ray_start, ray_end, Color(0.9, 0.95, 1.0, 0.35 * (1.0 - ray_t)), 1.5)
 
 func draw_orbital_environment(t_id: String, w: float, h: float) -> void:
 	draw_rect(Rect2(0, 0, w, h), Color(0.015, 0.02, 0.04))
