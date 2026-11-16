@@ -30,8 +30,9 @@ var current_local_center_y: float = -75.0
 func _ready() -> void:
 	update_pad_alignment()
 	current_local_center_y = -75.0
-	telemetry_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 1))
 	_init_window_panel()
+	ThemeManager.theme_changed.connect(func(_v): apply_theme())
+	apply_theme()
 	btn_start.pressed.connect(_on_start_pressed)
 	btn_next.pressed.connect(_on_next_pressed)
 	btn_next.visible = false
@@ -245,3 +246,23 @@ func _on_start_pressed() -> void:
 func _on_next_pressed() -> void:
 	SoundManager.play_click()
 	GameState.set_phase("cruise")
+
+func apply_theme() -> void:
+	telemetry_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 1))
+	window_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 1))
+	var text_col = ThemeManager.get_text_color()
+	var muted_col = ThemeManager.get_muted_color()
+	var cyan = ThemeManager.get_accent_cyan()
+
+	lbl_altitude.add_theme_color_override("font_color", text_col)
+	lbl_speed.add_theme_color_override("font_color", text_col)
+	lbl_gforce.add_theme_color_override("font_color", text_col)
+	lbl_telemetry_details.add_theme_color_override("font_color", muted_col)
+	lbl_target_info.add_theme_color_override("font_color", cyan)
+	lbl_offset_val.add_theme_color_override("font_color", text_col)
+	var win_title = window_panel.get_node_or_null("VBox/LblWindowTitle")
+	if win_title:
+		win_title.add_theme_color_override("font_color", cyan)
+	var bar = window_panel.get_node_or_null("VBox/WindowBarControl")
+	if bar:
+		bar.queue_redraw()

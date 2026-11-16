@@ -66,6 +66,11 @@ func _draw() -> void:
 	elif GameState.target_id == "bennu":
 		target_color = Color(0.6, 0.6, 0.65)
 		target_name_str = "Бенну"
+	elif GameState.target_id == "interstellar":
+		orbit_au = 158.0
+		orbit_target_r = orbit_earth_r * 2.65
+		target_color = Color(0.3, 0.85, 1.0)
+		target_name_str = "Межа геліосфери (120+ а.о.)"
 
 	draw_arc(center, orbit_earth_r * 0.5, 0, TAU, 48, Color(0.2, 0.4, 0.6, 0.08), 1.0)
 	draw_arc(center, orbit_earth_r, 0, TAU, 72, Color(0.2, 0.55, 0.9, 0.28), 1.5)
@@ -149,20 +154,44 @@ func _draw() -> void:
 	draw_circle(packet_pos, 3.5, Color(0.0, 0.9, 1.0, 0.75))
 	draw_arc(packet_pos, 6.0, 0, TAU, 16, Color(0.0, 0.9, 1.0, 0.4), 1.2)
 
-	var craft_pulse = 0.7 + sin(pulse_time * 7.0) * 0.3
-	draw_circle(craft_pos, 12.0, Color(0.18, 0.95, 0.6, 0.18 * craft_pulse))
-	draw_circle(craft_pos, 5.0, Color(0.95, 0.85, 0.3))
+	if GameState.target_id == "interstellar":
+		var dish_dir = (earth_pos - craft_pos).normalized()
+		var dish_center = craft_pos + dish_dir * 5.0
+		draw_circle(dish_center, 8.5, Color(0.96, 0.98, 1.0))
+		draw_arc(dish_center, 8.5, 0, TAU, 24, Color(0.65, 0.70, 0.80), 1.2)
+		draw_circle(dish_center, 2.5, Color(1.0, 0.82, 0.25))
 
-	draw_rect(Rect2(craft_pos - Vector2(16, 3), Vector2(10, 6)), Color(0.15, 0.45, 0.85), true)
-	draw_rect(Rect2(craft_pos - Vector2(16, 3), Vector2(10, 6)), Color(0.4, 0.7, 1.0), false, 1.0)
-	draw_rect(Rect2(craft_pos + Vector2(6, -3), Vector2(10, 6)), Color(0.15, 0.45, 0.85), true)
-	draw_rect(Rect2(craft_pos + Vector2(6, -3), Vector2(10, 6)), Color(0.4, 0.7, 1.0), false, 1.0)
+		draw_circle(craft_pos, 4.5, Color(0.85, 0.70, 0.22))
+		draw_circle(craft_pos - dish_dir * 1.5, 2.0, Color(1.0, 0.88, 0.35))
 
-	var dish_dir = (earth_pos - craft_pos).normalized()
-	var dish_pos = craft_pos + dish_dir * 4.0
-	draw_arc(dish_pos, 5.0, dish_dir.angle() - PI * 0.45, dish_dir.angle() + PI * 0.45, 12, Color(1.0, 1.0, 1.0), 1.8)
-	draw_line(craft_pos, dish_pos, Color(0.8, 0.8, 0.85), 1.5)
+		var rtg_dir = dish_dir.rotated(PI * 0.65)
+		draw_line(craft_pos, craft_pos + rtg_dir * 12.0, Color(0.5, 0.55, 0.65), 2.0)
+		for ri in range(3):
+			var r_pt = craft_pos + rtg_dir * (5.0 + ri * 3.5)
+			draw_circle(r_pt, 1.8, Color(1.0, 0.45, 0.15))
 
-	if font:
-		var craft_label = "АПАРАТ [%d%%]" % int(transfer_progress * 100.0)
-		draw_string(font, craft_pos + Vector2(18, -6), craft_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.18, 0.95, 0.6, 0.95))
+		var mag_dir = dish_dir.rotated(-PI * 0.7)
+		draw_line(craft_pos, craft_pos + mag_dir * 18.0, Color(0.65, 0.70, 0.80), 1.5)
+		draw_rect(Rect2(craft_pos + mag_dir * 18.0 - Vector2(2, 2), Vector2(4, 4)), Color(0.9, 0.92, 0.96))
+
+		if font:
+			var craft_label = "VOYAGER-1 [158 а.о. / МІЖЗОРЯНИЙ ПРОСТІР]"
+			draw_string(font, craft_pos + Vector2(18, -6), craft_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.3, 0.9, 1.0))
+	else:
+		var craft_pulse = 0.7 + sin(pulse_time * 7.0) * 0.3
+		draw_circle(craft_pos, 12.0, Color(0.18, 0.95, 0.6, 0.18 * craft_pulse))
+		draw_circle(craft_pos, 5.0, Color(0.95, 0.85, 0.3))
+
+		draw_rect(Rect2(craft_pos - Vector2(16, 3), Vector2(10, 6)), Color(0.15, 0.45, 0.85), true)
+		draw_rect(Rect2(craft_pos - Vector2(16, 3), Vector2(10, 6)), Color(0.4, 0.7, 1.0), false, 1.0)
+		draw_rect(Rect2(craft_pos + Vector2(6, -3), Vector2(10, 6)), Color(0.15, 0.45, 0.85), true)
+		draw_rect(Rect2(craft_pos + Vector2(6, -3), Vector2(10, 6)), Color(0.4, 0.7, 1.0), false, 1.0)
+
+		var dish_dir = (earth_pos - craft_pos).normalized()
+		var dish_pos = craft_pos + dish_dir * 4.0
+		draw_arc(dish_pos, 5.0, dish_dir.angle() - PI * 0.45, dish_dir.angle() + PI * 0.45, 12, Color(1.0, 1.0, 1.0), 1.8)
+		draw_line(craft_pos, dish_pos, Color(0.8, 0.8, 0.85), 1.5)
+
+		if font:
+			var craft_label = "АПАРАТ [%d%%]" % int(transfer_progress * 100.0)
+			draw_string(font, craft_pos + Vector2(18, -6), craft_label, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.18, 0.95, 0.6, 0.95))

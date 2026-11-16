@@ -240,25 +240,33 @@ func _draw() -> void:
 			Vector2(center.x - 18.0 * s, center.y + bus_h * 0.5 + 14.0 * s)
 		]), [dark_metal])
 
+	var deck_y = center.y - 16.0 * s
+	if plat_type == "lander":
+		deck_y = center.y - 30.0 * s
+	elif plat_type == "orbiter":
+		deck_y = center.y - 24.0 * s
+
 	var ant_id = antenna.get("id", "omni")
+	var mount_x = center.x - 14.0 * s
+	var mount_pos = Vector2(mount_x, deck_y)
+
 	if ant_id.begins_with("hga"):
 		var dish_r = 22.0 * s if ant_id == "hga_large" else 16.0 * s
-		var dish_c = Vector2(center.x - 15.0 * s, center.y - 34.0 * s)
-		draw_dish_textured(dish_c, dish_r, metal_color, dark_metal)
+		var dish_c = Vector2(mount_x, deck_y - dish_r * 0.85 - 12.0 * s)
+		draw_dish_textured(dish_c, dish_r, mount_pos, metal_color, dark_metal)
 	else:
-		var ant_base_y = center.y - 20.0 * s
-		var base_mount = Rect2(center.x - 4.0 * s, ant_base_y - 5.0 * s, 8.0 * s, 5.0 * s)
-		draw_rect(base_mount, Color(0.28, 0.32, 0.38))
-		draw_rect(base_mount, metal_color, false, 1.0)
+		var base_mount = Rect2(mount_x - 5.0 * s * 0.5, deck_y - 4.0 * s, 5.0 * s, 4.0 * s)
+		draw_rect(base_mount, dark_metal)
+		draw_rect(base_mount, metal_color, false, 1.2)
 
 		var seg_len = 7.0 * s
-		var seg_starts = [ant_base_y - 5.0 * s, ant_base_y - 5.0 * s - seg_len, ant_base_y - 5.0 * s - seg_len * 2.0]
+		var seg_starts = [deck_y - 4.0 * s, deck_y - 4.0 * s - seg_len, deck_y - 4.0 * s - seg_len * 2.0]
 		for si in range(3):
-			draw_line(Vector2(center.x, seg_starts[si]), Vector2(center.x, seg_starts[si] - seg_len), metal_color, 3.5 - si * 0.8)
+			draw_line(Vector2(mount_x, seg_starts[si]), Vector2(mount_x, seg_starts[si] - seg_len), metal_color, 3.5 - si * 0.8)
 			if si < 2:
-				draw_circle(Vector2(center.x, seg_starts[si] - seg_len), 2.5, Color(0.4, 0.44, 0.52))
+				draw_circle(Vector2(mount_x, seg_starts[si] - seg_len), 2.5, Color(0.4, 0.44, 0.52))
 
-		var whip_top = Vector2(center.x, seg_starts[2] - seg_len)
+		var whip_top = Vector2(mount_x, seg_starts[2] - seg_len)
 		var tip_r = 3.5 + sin(anim_time * 3.5) * 1.5
 		draw_circle(whip_top, tip_r, Color(0.18, 0.88, 1.0))
 		draw_circle(whip_top, tip_r * 0.5, Color.WHITE)
@@ -268,11 +276,6 @@ func _draw() -> void:
 			var wave_r = 6.0 + ow_phase * 26.0 * s
 			var wave_a = (1.0 - ow_phase) * 0.55
 			draw_arc(whip_top, wave_r, 0, TAU, 20, Color(0.2, 0.9, 1.0, wave_a), 1.4)
-
-		for ri in range(3):
-			var ra = PI * 0.5 + ri * TAU / 3.0
-			var radial_end = Vector2(center.x, ant_base_y - 2.5 * s) + Vector2(cos(ra), sin(ra)) * 10.0 * s
-			draw_line(Vector2(center.x, ant_base_y - 2.5 * s), radial_end, metal_color, 1.5)
 
 	var inst_count = instruments.size()
 	for i in range(inst_count):
@@ -397,16 +400,29 @@ func draw_wheel_textured(pos: Vector2, radius: float) -> void:
 	draw_circle(pos, 3.0, Color(0.14, 0.16, 0.20))
 	draw_circle(pos, 1.5, Color.WHITE)
 
-func draw_dish_textured(center: Vector2, radius: float, metal_col: Color, dark_col: Color) -> void:
+func draw_dish_textured(center: Vector2, radius: float, mount_base: Vector2, metal_col: Color, dark_col: Color) -> void:
 	var tilt = sin(anim_time * 0.8) * 14.0 * PI / 180.0
 	var arc_start = PI * 0.85 + tilt
 	var arc_end = PI * 2.15 + tilt
 
-	var mast_base = center + Vector2(0, 16.0)
+	var base_w = 8.0
+	draw_rect(Rect2(mount_base.x - base_w, mount_base.y - 3.5, base_w * 2.0, 5.0), dark_col)
+	draw_rect(Rect2(mount_base.x - base_w, mount_base.y - 3.5, base_w * 2.0, 5.0), metal_col, false, 1.2)
+	draw_circle(Vector2(mount_base.x - base_w + 2.0, mount_base.y - 1.0), 1.2, metal_col)
+	draw_circle(Vector2(mount_base.x + base_w - 2.0, mount_base.y - 1.0), 1.2, metal_col)
+
 	var mast_mid = center + Vector2(0, 4.0)
-	draw_line(mast_base, mast_mid, Color(0.25, 0.28, 0.35), 5.0)
-	draw_circle(mast_mid, 4.5, metal_col)
-	draw_circle(mast_mid, 2.5, dark_col)
+	draw_line(mount_base + Vector2(-3.0, 0), mast_mid + Vector2(-2.5, 0), Color(0.35, 0.40, 0.48), 3.5)
+	draw_line(mount_base + Vector2(3.0, 0), mast_mid + Vector2(2.5, 0), Color(0.35, 0.40, 0.48), 3.5)
+	draw_line(mount_base, mast_mid, metal_col, 2.5)
+
+	var brace_pt = mount_base.lerp(mast_mid, 0.5)
+	draw_line(brace_pt - Vector2(4, 0), brace_pt + Vector2(4, 0), metal_col, 2.0)
+	draw_circle(brace_pt, 2.5, dark_col)
+
+	draw_circle(mast_mid, 5.0, dark_col)
+	draw_circle(mast_mid, 3.5, metal_col)
+	draw_circle(mast_mid, 1.8, dark_col)
 
 	var dish_pts: PackedVector2Array = []
 	var seg_count = 24
@@ -426,6 +442,13 @@ func draw_dish_textured(center: Vector2, radius: float, metal_col: Color, dark_c
 	draw_polyline(dish_pts, Color(0.95, 0.98, 1.0), 3.0)
 	draw_polyline(inner_pts, Color(0.70, 0.78, 0.88), 1.8)
 
+	for rib_i in range(5):
+		var rib_t = rib_i / 4.0
+		var rib_a = lerp(arc_start, arc_end, rib_t)
+		var p_inner = center + Vector2(cos(rib_a), sin(rib_a)) * (radius * 0.75)
+		var p_outer = center + Vector2(cos(rib_a), sin(rib_a)) * radius
+		draw_line(p_inner, p_outer, Color(0.55, 0.65, 0.78, 0.6), 1.0)
+
 	var rim_left = center + Vector2(cos(arc_start), sin(arc_start)) * radius
 	var rim_right = center + Vector2(cos(arc_end), sin(arc_end)) * radius
 	var horn_dir = Vector2(cos((arc_start + arc_end) * 0.5), sin((arc_start + arc_end) * 0.5))
@@ -433,6 +456,7 @@ func draw_dish_textured(center: Vector2, radius: float, metal_col: Color, dark_c
 
 	draw_line(rim_left, horn_pos, Color(0.55, 0.62, 0.72), 1.5)
 	draw_line(rim_right, horn_pos, Color(0.55, 0.62, 0.72), 1.5)
+	draw_line(mast_mid, horn_pos, Color(0.40, 0.48, 0.58), 1.2)
 	draw_circle(horn_pos, 4.5, Color(0.18, 0.92, 1.0))
 	draw_circle(horn_pos, 2.0, Color.WHITE)
 

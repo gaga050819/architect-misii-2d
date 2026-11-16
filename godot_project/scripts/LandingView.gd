@@ -81,10 +81,8 @@ func _ready() -> void:
 	btn_thrust_right.button_down.connect(func(): is_right_key = true)
 	btn_thrust_right.button_up.connect(func(): is_right_key = false)
 
-	hud_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(14, 1))
-	mode_dialog.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(18, 2))
-	panel_manual.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(12, 1))
-	panel_auto.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(12, 1))
+	ThemeManager.theme_changed.connect(func(_v): apply_theme())
+	apply_theme()
 
 	init_planetary_physics()
 	craft_node.position = craft_pos
@@ -456,3 +454,39 @@ func _on_retry_pressed() -> void:
 func _on_next_pressed() -> void:
 	SoundManager.play_click()
 	GameState.set_phase("surface")
+
+func apply_theme() -> void:
+	hud_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(14, 1))
+	mode_dialog.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(18, 2))
+	panel_manual.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(12, 1))
+	panel_auto.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(12, 1))
+
+	var text_col = ThemeManager.get_text_color()
+	var muted_col = ThemeManager.get_muted_color()
+	var cyan = ThemeManager.get_accent_cyan()
+
+	lbl_alt.add_theme_color_override("font_color", text_col)
+	lbl_vspeed.add_theme_color_override("font_color", text_col)
+	lbl_hspeed.add_theme_color_override("font_color", text_col)
+	lbl_pitch.add_theme_color_override("font_color", text_col)
+	lbl_twr.add_theme_color_override("font_color", text_col)
+	lbl_fuel.add_theme_color_override("font_color", text_col)
+
+	var d_title = mode_dialog.get_node_or_null("VBox/LblDialogTitle")
+	if d_title:
+		d_title.add_theme_color_override("font_color", cyan)
+	var d_sub = mode_dialog.get_node_or_null("VBox/LblDialogSub")
+	if d_sub:
+		d_sub.add_theme_color_override("font_color", muted_col)
+	var m_title = panel_manual.get_node_or_null("VBoxM/LblManualTitle")
+	if m_title:
+		m_title.add_theme_color_override("font_color", text_col)
+	var m_desc = panel_manual.get_node_or_null("VBoxM/LblManualDesc")
+	if m_desc:
+		m_desc.add_theme_color_override("font_color", muted_col)
+	var a_title = panel_auto.get_node_or_null("VBoxA/LblAutoTitle")
+	if a_title:
+		a_title.add_theme_color_override("font_color", text_col)
+	var a_desc = panel_auto.get_node_or_null("VBoxA/LblAutoDesc")
+	if a_desc:
+		a_desc.add_theme_color_override("font_color", muted_col)

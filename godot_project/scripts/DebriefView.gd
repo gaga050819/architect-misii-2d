@@ -33,6 +33,7 @@ func _ready() -> void:
 
 	LeaderboardManager.leaderboard_loaded.connect(_on_leaderboard_loaded)
 	LeaderboardManager.score_submitted.connect(_on_score_submitted)
+	ThemeManager.theme_changed.connect(func(_v): apply_liquid_glass_styles())
 
 	apply_liquid_glass_styles()
 	display_real_nasa_photo()
@@ -43,6 +44,28 @@ func apply_liquid_glass_styles() -> void:
 	right_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 1))
 	photo_container.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(10, 1))
 	modal.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(20, 2))
+
+	var text_col = ThemeManager.get_text_color()
+	var muted_col = ThemeManager.get_muted_color()
+	var cyan = ThemeManager.get_accent_cyan()
+
+	lbl_breakdown.add_theme_color_override("font_color", text_col)
+	lbl_comparison.add_theme_color_override("font_color", muted_col)
+	lbl_photo_caption.add_theme_color_override("font_color", text_col)
+	lbl_photo_credit.add_theme_color_override("font_color", muted_col)
+
+	var patch_lbl = left_panel.get_node_or_null("VBox/PatchAnchor/LblPatchTitle")
+	if patch_lbl:
+		patch_lbl.add_theme_color_override("font_color", cyan)
+	var photo_hdr = left_panel.get_node_or_null("VBox/LblPhotoHeader")
+	if photo_hdr:
+		photo_hdr.add_theme_color_override("font_color", cyan)
+	var m_title = modal.get_node_or_null("VBox/LblModalTitle")
+	if m_title:
+		m_title.add_theme_color_override("font_color", cyan)
+	var m_sub = modal.get_node_or_null("VBox/LblModalSubtitle")
+	if m_sub:
+		m_sub.add_theme_color_override("font_color", muted_col)
 
 func display_real_nasa_photo() -> void:
 	var platform = DataManager.get_platform(GameState.platform_id)

@@ -82,6 +82,16 @@ func populate_targets() -> void:
 		btn.pressed.connect(func():
 			SoundManager.play_click()
 			GameState.target_id = t_id
+			if t_id == "interstellar":
+				GameState.class_id = "flagship"
+				GameState.rocket_id = "titan_iiie"
+				GameState.platform_id = "voyager_bus"
+				GameState.power_id = "rtg_3"
+				GameState.antenna_id = "hga_large"
+				GameState.selected_instruments = ["cam_hires", "magnetometer", "ir_spectrometer", "mass_spectrometer", "lidar"]
+				for ci in range(DataManager.mission_classes.size()):
+					if DataManager.mission_classes[ci].get("id") == "flagship":
+						class_option.select(ci)
 			GameState.state_changed.emit()
 			update_target_display()
 			apply_colors()
@@ -121,6 +131,8 @@ func update_target_display() -> void:
 	var spec_text = "Відстань від Сонця: %s а.о.\n" % [str(sun_au)]
 	spec_text += "Тривалість перельоту: ~%s діб\n" % [str(flight_d)]
 	spec_text += "Тип посадки: %s\n" % [str(landing_type)]
+	if GameState.target_id == "interstellar":
+		spec_text += "\n[АВТОПРЕСЕТ: Ракета Titan IIIE, Voyager Bus, 3x РІТЕГ, HGA, прилади MAG/CRS/IRIS]"
 	target_specs.text = spec_text
 
 	var tex = DataManager.get_image_texture(GameState.target_id)

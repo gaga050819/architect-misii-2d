@@ -62,10 +62,8 @@ func _ready() -> void:
 	btn_speed4x.pressed.connect(func(): _set_speed(4.0))
 	_update_speed_buttons()
 
-	left_telemetry_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(14, 1))
-	right_status_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(14, 1))
-	bottom_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(14, 1))
-	event_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 2))
+	ThemeManager.theme_changed.connect(func(_v): apply_theme())
+	apply_theme()
 
 	var target = DataManager.get_target(GameState.target_id)
 	total_flight_days = int(target.get("flight_days", 210))
@@ -255,3 +253,34 @@ func _on_arrival_pressed() -> void:
 		GameState.set_phase("surface")
 	else:
 		GameState.set_phase("landing")
+
+func apply_theme() -> void:
+	left_telemetry_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(14, 1))
+	right_status_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(14, 1))
+	bottom_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(14, 1))
+	event_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 2))
+
+	var text_col = ThemeManager.get_text_color()
+	var muted_col = ThemeManager.get_muted_color()
+	var cyan = ThemeManager.get_accent_cyan()
+
+	for lbl in left_telemetry_panel.find_children("*", "Label", true, false):
+		var l = lbl as Label
+		if l.name.begins_with("Sep"):
+			l.add_theme_color_override("font_color", cyan)
+		elif l.name in ["LblSunDist", "LblDistanceTraveled", "LblSpeed", "LblLightDelay", "LblSolarFlux", "LblPowerGen", "LblBattery", "LblBitrate", "LblSignalDbm", "LblDataSent"]:
+			l.add_theme_color_override("font_color", text_col)
+		else:
+			l.add_theme_color_override("font_color", muted_col)
+
+	lbl_craft_type.add_theme_color_override("font_color", cyan)
+	lbl_craft_name.add_theme_color_override("font_color", text_col)
+	for m_lbl in [lbl_m1, lbl_m2, lbl_m3, lbl_m4, lbl_m5, lbl_m6]:
+		if m_lbl:
+			m_lbl.add_theme_color_override("font_color", muted_col)
+
+	lbl_event_title.add_theme_color_override("font_color", ThemeManager.get_accent_amber())
+	lbl_event_desc.add_theme_color_override("font_color", text_col)
+	lbl_event_fact.add_theme_color_override("font_color", muted_col)
+	lbl_mission_time.add_theme_color_override("font_color", text_col)
+	_update_speed_buttons()

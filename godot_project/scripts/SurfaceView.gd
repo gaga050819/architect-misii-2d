@@ -37,7 +37,8 @@ func _ready() -> void:
 	btn_opt1.pressed.connect(func(): _resolve_surface_event(1))
 	btn_opt2.pressed.connect(func(): _resolve_surface_event(2))
 
-	event_popup.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 2))
+	ThemeManager.theme_changed.connect(func(_v): apply_theme())
+	apply_theme()
 
 	var platform = DataManager.get_platform(GameState.platform_id)
 	platform_type = str(platform.get("type", "rover"))
@@ -53,7 +54,46 @@ func setup_platform_mode() -> void:
 	btn_sample.visible = true
 	btn_antenna.visible = true
 
-	if platform_type == "orbiter" or platform_type == "sampler":
+	if GameState.target_id == "interstellar":
+		env_visual.is_orbit = true
+		vehicle_node.position.y = 240.0
+		rover_x = 450.0
+		vehicle_node.position.x = rover_x
+		env_visual.rover_x = rover_x
+
+		btn_left.text = "<- Курс до геліопаузи"
+		btn_right.text = "Міжзоряний курс ->"
+		btn_sample.text = "Замір плазми і поля"
+		btn_antenna.text = "Канал наддалекого DSN"
+
+		btn_left.button_down.connect(func(): move_dir = -1.0)
+		btn_left.button_up.connect(func(): move_dir = 0.0)
+		btn_left.pressed.connect(func():
+			rover_x = clamp(rover_x - 45.0, 80.0, 1200.0)
+			vehicle_node.position.x = rover_x
+			env_visual.rover_x = rover_x
+			total_distance_traveled += 45.0
+			check_sample_spots()
+		)
+		btn_right.button_down.connect(func(): move_dir = 1.0)
+		btn_right.button_up.connect(func(): move_dir = 0.0)
+		btn_right.pressed.connect(func():
+			rover_x = clamp(rover_x + 45.0, 80.0, 1200.0)
+			vehicle_node.position.x = rover_x
+			env_visual.rover_x = rover_x
+			total_distance_traveled += 45.0
+			check_sample_spots()
+		)
+
+		sample_spots = [
+			{"x": 280.0, "y": 420.0, "name": "Ударна хвиля геліопаузи (MAG/PWS)", "method": "scan", "science": 60.0, "taken": false},
+			{"x": 580.0, "y": 420.0, "name": "Спектрометрія космічних променів (CRS)", "method": "scan", "science": 65.0, "taken": false},
+			{"x": 880.0, "y": 420.0, "name": "Міжзоряне магнітне поле (Fluxgate MAG)", "method": "scan", "science": 70.0, "taken": false},
+			{"x": 1100.0, "y": 420.0, "name": "Плазмова щільність за межами геліосфери", "method": "scan", "science": 75.0, "taken": false}
+		]
+		lbl_target_hint.text = "Глибокий космос: вимірюйте космічні промені, плазму та межу геліосфери!"
+
+	elif platform_type == "orbiter" or platform_type == "sampler":
 		env_visual.is_orbit = true
 		vehicle_node.position.y = 210.0
 		rover_x = 380.0
@@ -323,3 +363,20 @@ func update_hud() -> void:
 func _on_finish_pressed() -> void:
 	SoundManager.play_click()
 	GameState.set_phase("debrief")
+
+func apply_theme() -> void:
+	event_popup.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 2))
+	var top_hud = get_node_or_null("TopHUD")
+	if top_hud:
+		top_hud.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(12, 1))
+
+	var text_col = ThemeManager.get_text_color()
+	var muted_col = ThemeManager.get_muted_color()
+	var emerald = ThemeManager.get_accent_emerald()
+	var amber = ThemeManager.get_accent_amber()
+
+	lbl_science.add_theme_color_override("font_color", emerald)
+	lbl_target_hint.add_theme_color_override("font_color", amber)
+	lbl_ev_title.add_theme_color_override("font_color", amber)
+	lbl_ev_desc.add_theme_color_override("font_color", text_col)
+	lbl_ev_fact.add_theme_color_override("font_color", muted_col)
