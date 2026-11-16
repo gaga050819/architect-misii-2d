@@ -146,7 +146,7 @@ placeholder_text = "Ваш позивний або ім'я командира...
 [node name="BtnSubmit" type="Button" parent="Content/RightPanel/VBox/LeaderboardBox/HBoxSubmit"]
 custom_minimum_size = Vector2(210, 42)
 layout_mode = 2
-text = "Записати в лідерборд 🏆"
+text = "Записати в лідерборд [ТОП]"
 
 [node name="LblSubmitStatus" type="Label" parent="Content/RightPanel/VBox/LeaderboardBox"]
 layout_mode = 2
@@ -163,7 +163,7 @@ alignment = 2
 custom_minimum_size = Vector2(230, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
-text = "🌍 ТОП-30 СВІТУ (РЕЙТИНГ)"
+text = "ТОП-30 СВІТУ (РЕЙТИНГ)"
 
 [node name="BtnRestart" type="Button" parent="Content/RightPanel/VBox/HBoxActions"]
 custom_minimum_size = Vector2(220, 48)
@@ -195,7 +195,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
 theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
-text = "🏆 СВІТОВИЙ ЛІДЕРБОРД КОМАНДИРІВ"
+text = "СВІТОВИЙ ЛІДЕРБОРД КОМАНДИРІВ"
 
 [node name="LblModalSubtitle" type="Label" parent="LeaderboardModal/VBox"]
 layout_mode = 2

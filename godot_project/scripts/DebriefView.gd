@@ -137,7 +137,7 @@ func _on_score_submitted(success: bool) -> void:
 	btn_submit.disabled = false
 	if success:
 		has_submitted = true
-		btn_submit.text = "Опубліковано ✓"
+		btn_submit.text = "Опубліковано [OK]"
 		btn_submit.disabled = true
 		lbl_submit_status.text = "Успішно опубліковано у Світовий лідерборд!"
 		lbl_submit_status.modulate = ThemeManager.accent_emerald
