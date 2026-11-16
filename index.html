@@ -262,13 +262,66 @@ html, body {
 	border-radius: 4px;
 }
 
+#fs-btn-box {
+	position: fixed;
+	top: 13px;
+	right: 215px;
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+}
+
+#fs-btn {
+	background: rgba(12, 22, 36, 0.88);
+	color: #00e5ff;
+	border: 1px solid rgba(0, 229, 255, 0.45);
+	border-radius: 8px;
+	padding: 5px 11px;
+	font-family: system-ui, -apple-system, sans-serif;
+	font-size: 12px;
+	font-weight: 500;
+	cursor: pointer;
+	backdrop-filter: blur(6px);
+	touch-action: manipulation;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+	transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+#fs-btn:hover {
+	background: rgba(0, 229, 255, 0.18);
+	border-color: #00e5ff;
+}
+
+#fs-btn:active {
+	transform: scale(0.96);
+}
+
+@media (max-width: 860px) {
+	#fs-btn-box {
+		right: 202px;
+		top: 10px;
+	}
+	#fs-btn {
+		padding: 5px 8px;
+	}
+	#fs-btn-text {
+		display: none;
+	}
+}
+
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 
 	</head>
-	<body><div style="position:fixed;top:10px;right:12px;z-index:9999;display:flex;gap:8px;align-items:center;">
-<button onclick="toggleMobileFullscreen()" style="background:rgba(12,22,36,0.85);color:#00e5ff;border:1px solid rgba(0,229,255,0.4);border-radius:8px;padding:6px 12px;font-family:system-ui,-apple-system,sans-serif;font-size:12px;cursor:pointer;backdrop-filter:blur(6px);touch-action:manipulation;">&#x26F6; &#x41F;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x435;&#x43A;&#x440;&#x430;&#x43D;</button>
+	<body><div id="fs-btn-box">
+<button id="fs-btn" onclick="toggleMobileFullscreen()" title="&#x41F;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x435;&#x43A;&#x440;&#x430;&#x43D;">
+	<span style="font-size: 14px; line-height: 1;">&#x26F6;</span>
+	<span id="fs-btn-text">&#x41F;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x435;&#x43A;&#x440;&#x430;&#x43D;</span>
+</button>
 </div><div id="portrait-advisory">
 	<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2" style="animation: rotatePhoneAnim 2.5s infinite ease-in-out;">
 		<rect x="5" y="2" width="14" height="20" rx="2.5"/>
@@ -369,7 +422,6 @@ const engine = new Engine(GODOT_CONFIG);
 			} catch (err) {
 				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
 			}
-			// There's a chance that installing the service worker would fix the issue
 			Promise.race([
 				serviceWorkerRegistrationPromise.then((registration) => {
 					if (registration != null) {
@@ -377,18 +429,15 @@ const engine = new Engine(GODOT_CONFIG);
 					}
 					return registration;
 				}).then(() => engine.installServiceWorker()),
-				// For some reason, `getRegistration()` can stall
 				new Promise((resolve) => {
 					setTimeout(() => resolve(), 2000);
 				}),
 			]).then(() => {
-				// Reload if there was no error.
 				window.location.reload();
 			}).catch((err) => {
 				console.error('Error while registering service worker:', err);
 			});
 		} else {
-			// Display the message as usual
 			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
 			displayFailureNotice(missingMsg + missing.join('\n'));
 		}
@@ -425,6 +474,15 @@ function toggleMobileFullscreen() {
 		else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
 	}
 }
+function updateFullscreenBtn() {
+	var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+	var txt = document.getElementById('fs-btn-text');
+	if (txt) {
+		txt.textContent = isFs ? '\u0417\u0433\u043E\u0440\u043D\u0443\u0442\u0438' : '\u041F\u043E\u0432\u043D\u0438\u0439 \u0435\u043A\u0440\u0430\u043D';
+	}
+}
+document.addEventListener('fullscreenchange', updateFullscreenBtn);
+document.addEventListener('webkitfullscreenchange', updateFullscreenBtn);
 window.addEventListener('touchstart', function() {}, {passive: true});
 document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
 </script></body>
