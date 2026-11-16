@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
@@ -7,7 +7,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 		<meta name="theme-color" content="#0a0f18">
-		<title>&#x410;&#x440;&#x445;&#x456;&#x442;&#x435;&#x43A;&#x442;&#x43E;&#x440; &#x43C;&#x456;&#x441;&#x456;&#x457;</title>
+		<title>Архітектор місії</title>
 		
 		<style>
 html, body, #canvas {
@@ -318,9 +318,9 @@ html, body {
 
 	</head>
 	<body><div id="fs-btn-box">
-<button id="fs-btn" onclick="toggleMobileFullscreen()" title="&#x41F;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x435;&#x43A;&#x440;&#x430;&#x43D;">
-	<span style="font-size: 14px; line-height: 1;">&#x26F6;</span>
-	<span id="fs-btn-text">&#x41F;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x435;&#x43A;&#x440;&#x430;&#x43D;</span>
+<button id="fs-btn" onclick="toggleMobileFullscreen()" title="Повний екран">
+	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+	<span id="fs-btn-text">Повний екран</span>
 </button>
 </div><div id="portrait-advisory">
 	<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2" style="animation: rotatePhoneAnim 2.5s infinite ease-in-out;">
@@ -328,10 +328,10 @@ html, body {
 		<path d="M12 18h.01M9 6h6"/>
 	</svg>
 	<div style="margin-top:16px;font-family:system-ui,-apple-system,sans-serif;font-size:17px;font-weight:600;color:#ffffff;text-align:center;">
-		&#x41F;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x435;&#x43A;&#x440;&#x430;&#x43D;
+		Повний екран
 	</div>
 	<div style="margin-top:8px;font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:#8ab4f8;text-align:center;max-width:280px;line-height:1.4;">
-		&#x414;&#x43B;&#x44F; &#x437;&#x440;&#x443;&#x447;&#x43D;&#x43E;&#x457; &#x433;&#x440;&#x438; &#x43F;&#x435;&#x440;&#x435;&#x432;&#x435;&#x434;&#x456;&#x442;&#x44C; &#x43F;&#x440;&#x438;&#x441;&#x442;&#x440;&#x456;&#x439; &#x443; &#x433;&#x43E;&#x440;&#x438;&#x437;&#x43E;&#x43D;&#x442;&#x430;&#x43B;&#x44C;&#x43D;&#x438;&#x439; &#x440;&#x435;&#x436;&#x438;&#x43C; (Landscape)
+		Для зручної гри переведіть пристрій у горизонтальний режим (Landscape)
 	</div>
 </div>
 		<canvas id="canvas">
@@ -344,14 +344,14 @@ html, body {
 
 		<div id="status">
 			<div id="custom-splash">
-				<div class="splash-badge">&#x1F680; 2D &#x421;&#x418;&#x41C;&#x423;&#x41B;&#x42F;&#x422;&#x41E;&#x420;</div>
-				<h1 class="splash-title">&#x410;&#x420;&#x425;&#x406;&#x422;&#x415;&#x41A;&#x422;&#x41E;&#x420; &#x41C;&#x406;&#x421;&#x406;&#x407; 2D</h1>
+				<div class="splash-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C12 2 7 6 7 13a5 5 0 0 0 10 0C17 6 12 2 12 2Z"/><path d="M9 13c0 2 1 3 3 3s3-1 3-3"/><line x1="12" y1="22" x2="12" y2="17"/></svg> 2D СИМУЛЯТОР</div>
+				<h1 class="splash-title">АРХІТЕКТОР МІСІЇ 2D</h1>
 				<div class="splash-line"></div>
 				<div class="splash-authors">
-					<div class="splash-author-main">&#x421;&#x442;&#x432;&#x43E;&#x440;&#x438;&#x432; 2D &#x433;&#x440;&#x443;: <span>&#x406;&#x432;&#x430;&#x43D;&#x446;&#x456;&#x432; &#x41C;&#x430;&#x440;&#x43A;&#x456;&#x44F;&#x43D;</span></div>
-					<div class="splash-author-sub">&#x421;&#x442;&#x432;&#x43E;&#x440;&#x44E;&#x432;&#x430;&#x447; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x438; &#x433;&#x440;&#x438;: <span>&#x420;&#x43E;&#x43C;&#x430;&#x43D; &#x411;&#x456;&#x43B;&#x438;&#x439;</span></div>
+					<div class="splash-author-main">Створив 2D гру: <span>Іванців Маркіян</span></div>
+					<div class="splash-author-sub">Створювач основи гри: <span>Роман Білий</span></div>
 				</div>
-				<div id="splash-status-text">&#x417;&#x430;&#x432;&#x430;&#x43D;&#x442;&#x430;&#x436;&#x435;&#x43D;&#x43D;&#x44F; &#x43A;&#x43E;&#x441;&#x43C;&#x456;&#x447;&#x43D;&#x438;&#x445; &#x441;&#x438;&#x441;&#x442;&#x435;&#x43C;...</div>
+				<div id="splash-status-text">Завантаження космічних систем...</div>
 			</div>
 			<progress id="status-progress"></progress>
 			<div id="status-notice"></div>
@@ -450,7 +450,7 @@ const engine = new Engine(GODOT_CONFIG);
 					statusProgress.max = total;
 					var pct = Math.round((current / total) * 100);
 					var txt = document.getElementById('splash-status-text');
-					if (txt) { txt.textContent = '\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F... ' + pct + '%'; }
+					if (txt) { txt.textContent = 'Завантаження... ' + pct + '%'; }
 				} else {
 					statusProgress.removeAttribute('value');
 					statusProgress.removeAttribute('max');
@@ -478,7 +478,7 @@ function updateFullscreenBtn() {
 	var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
 	var txt = document.getElementById('fs-btn-text');
 	if (txt) {
-		txt.textContent = isFs ? '\u0417\u0433\u043E\u0440\u043D\u0443\u0442\u0438' : '\u041F\u043E\u0432\u043D\u0438\u0439 \u0435\u043A\u0440\u0430\u043D';
+		txt.textContent = isFs ? 'Згорнути' : 'Повний екран';
 	}
 }
 document.addEventListener('fullscreenchange', updateFullscreenBtn);

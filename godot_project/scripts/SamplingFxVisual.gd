@@ -216,7 +216,7 @@ func draw_drill_sequence() -> void:
 	var ground_contact = target_pos
 	var arm_end = origin_pos.lerp(ground_contact + Vector2(0.0, -14.0), reach)
 	var mid = origin_pos.lerp(arm_end, 0.48)
-	var elbow = mid + Vector2(0.0, -24.0 * reach)
+	var elbow = mid + Vector2((ground_contact.x - origin_pos.x) * 0.1, -38.0 * reach)
 
 	var dark_metal = Color(0.18, 0.22, 0.28)
 	var arm_metal = Color(0.68, 0.72, 0.78)
@@ -283,7 +283,7 @@ func draw_scoop_sequence() -> void:
 	var ground_contact = target_pos
 	var scoop_end = origin_pos.lerp(ground_contact + Vector2(0.0, -8.0), reach)
 	var mid = origin_pos.lerp(scoop_end, 0.5)
-	var elbow = mid + Vector2(0.0, -26.0 * reach)
+	var elbow = mid + Vector2((target_pos.x - origin_pos.x) * 0.1, -40.0 * reach)
 
 	var arm_metal = Color(0.65, 0.70, 0.78)
 	var dark_metal = Color(0.20, 0.24, 0.30)

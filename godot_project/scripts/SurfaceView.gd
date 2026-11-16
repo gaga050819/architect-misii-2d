@@ -260,9 +260,9 @@ func _on_sample_pressed() -> void:
 				var is_facing_left = target_pt.x < vehicle_node.position.x
 				var arm_side = -1.0 if is_facing_left else 1.0
 				if method == "laser":
-					origin_pt = vehicle_node.position + Vector2(arm_side * 18.0, -38.0)
+					origin_pt = vehicle_node.position + Vector2(arm_side * 20.0, -22.0)
 				else:
-					origin_pt = vehicle_node.position + Vector2(arm_side * 28.0, 14.0)
+					origin_pt = vehicle_node.position + Vector2(arm_side * 30.0, -6.0)
 
 			if method == "scan":
 				fx_visual.start_orbital_scan(origin_pt, target_pt)
