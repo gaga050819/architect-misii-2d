@@ -17,7 +17,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = -90.0
+offset_bottom = -80.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -28,8 +28,6 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 80.0
-offset_right = 80.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -38,17 +36,347 @@ script = ExtResource("2_solar")
 
 [node name="LeftTelemetry" type="PanelContainer" parent="Content"]
 layout_mode = 0
-offset_left = 30.0
-offset_top = 30.0
+offset_left = 20.0
+offset_top = 16.0
 offset_right = 380.0
-offset_bottom = 250.0
+offset_bottom = 600.0
 
 [node name="VBox" type="VBoxContainer" parent="Content/LeftTelemetry"]
 layout_mode = 2
+theme_override_constants/separation = 8
 
-[node name="LblTelemetry" type="Label" parent="Content/LeftTelemetry/VBox"]
+[node name="HBoxHeader" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
 layout_mode = 2
-text = "Телеметрія перельоту"
+
+[node name="LblTitle" type="Label" parent="Content/LeftTelemetry/VBox/HBoxHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "ТЕЛЕМЕТРІЯ ПЕРЕЛЬОТУ"
+
+[node name="LblStatusDot" type="Label" parent="Content/LeftTelemetry/VBox/HBoxHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.94, 0.58, 1)
+theme_override_font_sizes/font_size = 11
+text = "[DSN ONLINE]"
+
+[node name="LblStation" type="Label" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
+theme_override_font_sizes/font_size = 11
+text = "Станція: DSN-14 Goldstone 70m"
+
+[node name="Sep1" type="HSeparator" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblSec1" type="Label" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.74, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "1. ОРБІТАЛЬНА КІНЕМАТИКА"
+
+[node name="HBoxSunDist" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxSunDist"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Відстань від Сонця:"
+
+[node name="LblSunDist" type="Label" parent="Content/LeftTelemetry/VBox/HBoxSunDist"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "1.27 а.о."
+
+[node name="BarSunDist" type="ProgressBar" parent="Content/LeftTelemetry/VBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+show_percentage = false
+
+[node name="HBoxTraveled" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxTraveled"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Пройдена дистанція:"
+
+[node name="LblDistanceTraveled" type="Label" parent="Content/LeftTelemetry/VBox/HBoxTraveled"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "124.5 млн км"
+
+[node name="HBoxSpeed" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxSpeed"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Геліоцентрична швидкість:"
+
+[node name="LblSpeed" type="Label" parent="Content/LeftTelemetry/VBox/HBoxSpeed"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.94, 0.58, 1)
+theme_override_font_sizes/font_size = 12
+text = "26.8 км/с"
+
+[node name="HBoxDelay" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxDelay"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Затримка сигналу (1-way):"
+
+[node name="LblLightDelay" type="Label" parent="Content/LeftTelemetry/VBox/HBoxDelay"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.74, 0.2, 1)
+theme_override_font_sizes/font_size = 12
+text = "4 хв 18 с"
+
+[node name="Sep2" type="HSeparator" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblSec2" type="Label" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.74, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "2. ЕНЕРГЕТИКА ТА РЕСУРСИ"
+
+[node name="HBoxFlux" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxFlux"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Сонячний потік:"
+
+[node name="LblSolarFlux" type="Label" parent="Content/LeftTelemetry/VBox/HBoxFlux"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "841 Вт/м²"
+
+[node name="HBoxPower" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxPower"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Генерація живлення:"
+
+[node name="LblPowerGen" type="Label" parent="Content/LeftTelemetry/VBox/HBoxPower"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.94, 0.58, 1)
+theme_override_font_sizes/font_size = 12
+text = "384 Вт"
+
+[node name="HBoxBattery" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxBattery"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Заряд батарей:"
+
+[node name="LblBattery" type="Label" parent="Content/LeftTelemetry/VBox/HBoxBattery"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.94, 0.58, 1)
+theme_override_font_sizes/font_size = 12
+text = "99% [НОРМА]"
+
+[node name="Sep3" type="HSeparator" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblSec3" type="Label" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.74, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "3. КАНАЛ ЗВ'ЯЗКУ DSN"
+
+[node name="HBoxRate" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxRate"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Швидкість каналу:"
+
+[node name="LblBitrate" type="Label" parent="Content/LeftTelemetry/VBox/HBoxRate"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "15.5 Мбіт/с"
+
+[node name="HBoxSignal" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxSignal"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Рівень сигналу:"
+
+[node name="LblSignalDbm" type="Label" parent="Content/LeftTelemetry/VBox/HBoxSignal"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "-134 dBm [СТАБІЛЬНИЙ]"
+
+[node name="HBoxPackets" type="HBoxContainer" parent="Content/LeftTelemetry/VBox"]
+layout_mode = 2
+
+[node name="LblK" type="Label" parent="Content/LeftTelemetry/VBox/HBoxPackets"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Передано телеметрії:"
+
+[node name="LblDataSent" type="Label" parent="Content/LeftTelemetry/VBox/HBoxPackets"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "4 280 Мбіт"
+
+[node name="RightStatusPanel" type="PanelContainer" parent="Content"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -380.0
+offset_top = 16.0
+offset_right = -20.0
+offset_bottom = 600.0
+grow_horizontal = 0
+
+[node name="VBox" type="VBoxContainer" parent="Content/RightStatusPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HBoxHeader" type="HBoxContainer" parent="Content/RightStatusPanel/VBox"]
+layout_mode = 2
+
+[node name="LblTitle" type="Label" parent="Content/RightStatusPanel/VBox/HBoxHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "МОНІТОРИНГ БОРТУ"
+
+[node name="LblCraftType" type="Label" parent="Content/RightStatusPanel/VBox/HBoxHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
+theme_override_font_sizes/font_size = 11
+text = "ОРБІТЕР"
+
+[node name="LblCraftName" type="Label" parent="Content/RightStatusPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = "Апарат: Mars Explorer"
+
+[node name="Sep1" type="HSeparator" parent="Content/RightStatusPanel/VBox"]
+layout_mode = 2
+
+[node name="LblSubSec" type="Label" parent="Content/RightStatusPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.74, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "СТАН КРИТИЧНИХ ПІДСИСТЕМ"
+
+[node name="VBoxSubsystems" type="VBoxContainer" parent="Content/RightStatusPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LblSub1" type="Label" parent="Content/RightStatusPanel/VBox/VBoxSubsystems"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.94, 0.58, 1)
+theme_override_font_sizes/font_size = 12
+text = "[OK] Навігація (IMU + Star Tracker)"
+
+[node name="LblSub2" type="Label" parent="Content/RightStatusPanel/VBox/VBoxSubsystems"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.94, 0.58, 1)
+theme_override_font_sizes/font_size = 12
+text = "[OK] Терморегуляція (+18.4°C)"
+
+[node name="LblSub3" type="Label" parent="Content/RightStatusPanel/VBox/VBoxSubsystems"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.94, 0.58, 1)
+theme_override_font_sizes/font_size = 12
+text = "[OK] Орієнтація (3-осьова)"
+
+[node name="LblSub4" type="Label" parent="Content/RightStatusPanel/VBox/VBoxSubsystems"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.94, 0.58, 1)
+theme_override_font_sizes/font_size = 12
+text = "[OK] Комп'ютер (RAD750 133 МГц)"
+
+[node name="LblSub5" type="Label" parent="Content/RightStatusPanel/VBox/VBoxSubsystems"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.94, 0.58, 1)
+theme_override_font_sizes/font_size = 12
+text = "[OK] Рушії (RCS азотні двигуни)"
+
+[node name="Sep2" type="HSeparator" parent="Content/RightStatusPanel/VBox"]
+layout_mode = 2
+
+[node name="LblMilestoneSec" type="Label" parent="Content/RightStatusPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.74, 0.2, 1)
+theme_override_font_sizes/font_size = 11
+text = "КЛЮЧОВІ ЕТАПИ МІСІЇ"
+
+[node name="VBoxMilestones" type="VBoxContainer" parent="Content/RightStatusPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="LblM1" type="Label" parent="Content/RightStatusPanel/VBox/VBoxMilestones"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "[V] T+0d  Старт і відліт від Землі"
+
+[node name="LblM2" type="Label" parent="Content/RightStatusPanel/VBox/VBoxMilestones"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "[V] T+2d  Розгортання сонячних крил"
+
+[node name="LblM3" type="Label" parent="Content/RightStatusPanel/VBox/VBoxMilestones"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "[...] T+45d Траєкторна корекція ТКМ-1"
+
+[node name="LblM4" type="Label" parent="Content/RightStatusPanel/VBox/VBoxMilestones"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "[...] T+110d Середина міжпланетного шляху"
+
+[node name="LblM5" type="Label" parent="Content/RightStatusPanel/VBox/VBoxMilestones"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "[...] T+185d Траєкторна корекція ТКМ-2"
+
+[node name="LblM6" type="Label" parent="Content/RightStatusPanel/VBox/VBoxMilestones"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "[...] T+210d Захоплення орбіти цілі"
 
 [node name="BottomPanel" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -62,23 +390,46 @@ grow_vertical = 0
 
 [node name="HBoxMain" type="HBoxContainer" parent="BottomPanel"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
 
-[node name="LblProgress" type="Label" parent="BottomPanel/HBoxMain"]
-custom_minimum_size = Vector2(220, 0)
+[node name="LblMissionTime" type="Label" parent="BottomPanel/HBoxMain"]
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
-text = "Прогрес перельоту: 0%"
+theme_override_font_sizes/font_size = 14
+text = "Місійний час: T+ 0 діб (з 210)"
 
 [node name="BarCruise" type="ProgressBar" parent="BottomPanel/HBoxMain"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="BtnArrival" type="Button" parent="BottomPanel/HBoxMain"]
-custom_minimum_size = Vector2(200, 45)
+[node name="HBoxControls" type="HBoxContainer" parent="BottomPanel/HBoxMain"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BtnSpeed1x" type="Button" parent="BottomPanel/HBoxMain/HBoxControls"]
+custom_minimum_size = Vector2(40, 36)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 18
+text = "1x"
+
+[node name="BtnSpeed2x" type="Button" parent="BottomPanel/HBoxMain/HBoxControls"]
+custom_minimum_size = Vector2(40, 36)
+layout_mode = 2
+size_flags_vertical = 4
+text = "2x"
+
+[node name="BtnSpeed4x" type="Button" parent="BottomPanel/HBoxMain/HBoxControls"]
+custom_minimum_size = Vector2(40, 36)
+layout_mode = 2
+size_flags_vertical = 4
+text = "4x"
+
+[node name="BtnArrival" type="Button" parent="BottomPanel/HBoxMain"]
+custom_minimum_size = Vector2(210, 45)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 16
 text = "Прибуття до цілі ->"
 
 [node name="EventPopup" type="PanelContainer" parent="."]

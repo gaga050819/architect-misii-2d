@@ -66,10 +66,10 @@ func _on_state_changed() -> void:
 
 func update_phase_buttons() -> void:
 	var phase_names = ["briefing", "assembly", "launch", "cruise", "landing", "surface", "debrief"]
-	var is_light = ThemeManager.theme_value > 0.5
 	var text_col = ThemeManager.get_text_color()
 	var platform = DataManager.get_platform(GameState.platform_id)
 	var is_orbiter = str(platform.get("type", "rover")) == "orbiter" or GameState.platform_id == "sampler"
+	var current_idx = phase_names.find(GameState.current_phase)
 
 	for i in range(phase_buttons_container.get_child_count()):
 		var btn = phase_buttons_container.get_child(i) as Button
@@ -80,23 +80,34 @@ func update_phase_buttons() -> void:
 			elif i == 5:
 				btn.text = "6. Орбіта" if is_orbiter else "6. Поверхня"
 
-			var is_active = p_name == GameState.current_phase
+			var is_active = (p_name == GameState.current_phase)
+			var is_past = (current_idx != -1 and i < current_idx)
+
 			var sb = StyleBoxFlat.new()
 			sb.set_corner_radius_all(8)
-			sb.content_margin_left = 10
-			sb.content_margin_right = 10
-			sb.content_margin_top = 4
-			sb.content_margin_bottom = 4
+			sb.content_margin_left = 12
+			sb.content_margin_right = 12
+			sb.content_margin_top = 5
+			sb.content_margin_bottom = 5
 
 			if is_active:
-				sb.bg_color = ThemeManager.accent_emerald * Color(1, 1, 1, 0.25)
-				sb.border_color = ThemeManager.accent_emerald
+				sb.bg_color = Color(0.18, 0.94, 0.58, 0.22)
+				sb.border_color = Color(0.18, 0.94, 0.58, 0.95)
 				sb.set_border_width_all(1)
-				btn.add_theme_color_override("font_color", ThemeManager.accent_emerald)
+				sb.border_width_bottom = 2
+				sb.shadow_color = Color(0.18, 0.94, 0.58, 0.3)
+				sb.shadow_size = 6
+				btn.add_theme_color_override("font_color", Color(0.18, 0.94, 0.58, 1.0))
+			elif is_past:
+				sb.bg_color = Color(0.0, 0.85, 1.0, 0.10)
+				sb.border_color = Color(0.0, 0.85, 1.0, 0.45)
+				sb.set_border_width_all(1)
+				btn.add_theme_color_override("font_color", Color(0.0, 0.85, 1.0, 0.95))
 			else:
-				sb.bg_color = Color(0, 0, 0, 0)
-				sb.border_color = Color(0, 0, 0, 0)
-				btn.add_theme_color_override("font_color", text_col * Color(1, 1, 1, 0.75))
+				sb.bg_color = Color(0.08, 0.12, 0.18, 0.25)
+				sb.border_color = Color(0.3, 0.4, 0.55, 0.25)
+				sb.set_border_width_all(1)
+				btn.add_theme_color_override("font_color", text_col * Color(1, 1, 1, 0.6))
 			btn.add_theme_stylebox_override("normal", sb)
 
 func _on_nav_button_pressed(target_phase: String) -> void:
