@@ -22,6 +22,7 @@ DataManager="*res://scripts/DataManager.gd"
 Calc="*res://scripts/Calc.gd"
 GameState="*res://scripts/GameState.gd"
 SoundManager="*res://scripts/SoundManager.gd"
+LeaderboardManager="*res://scripts/LeaderboardManager.gd"
 
 [display]
 

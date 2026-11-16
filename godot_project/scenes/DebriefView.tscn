@@ -27,12 +27,12 @@ grow_vertical = 2
 theme_override_constants/separation = 24
 
 [node name="LeftPanel" type="PanelContainer" parent="Content"]
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(380, 0)
 layout_mode = 2
 
 [node name="VBox" type="VBoxContainer" parent="Content/LeftPanel"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="LblPatchTitle" type="Label" parent="Content/LeftPanel/VBox"]
@@ -42,11 +42,11 @@ theme_override_font_sizes/font_size = 14
 text = "ОФІЦІЙНА ЕМБЛЕМА МІСІЇ"
 
 [node name="PatchAnchor" type="Control" parent="Content/LeftPanel/VBox"]
-custom_minimum_size = Vector2(0, 180)
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 
 [node name="MissionPatchVisual" type="Node2D" parent="Content/LeftPanel/VBox/PatchAnchor"]
-position = Vector2(200, 90)
+position = Vector2(190, 80)
 script = ExtResource("2_patch")
 
 [node name="HSeparator" type="HSeparator" parent="Content/LeftPanel/VBox"]
@@ -58,7 +58,7 @@ theme_override_constants/separation = 8
 alignment = 1
 
 [node name="IconCam" type="TextureRect" parent="Content/LeftPanel/VBox/HBoxPhotoHeader"]
-custom_minimum_size = Vector2(22, 22)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("3_cam")
 expand_mode = 1
@@ -71,7 +71,7 @@ theme_override_font_sizes/font_size = 13
 text = "АРХІВ NASA: РЕАЛЬНИЙ ЗНІМОК"
 
 [node name="PhotoContainer" type="PanelContainer" parent="Content/LeftPanel/VBox"]
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
 
 [node name="NasaPhotoRect" type="TextureRect" parent="Content/LeftPanel/VBox/PhotoContainer"]
@@ -100,12 +100,12 @@ size_flags_horizontal = 3
 
 [node name="VBox" type="VBoxContainer" parent="Content/RightPanel"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
 [node name="LblScore" type="Label" parent="Content/RightPanel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.9, 0.6, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 26
 text = "ОЦІНКА МІСІЇ: 100 / 100"
 
 [node name="HSeparator" type="HSeparator" parent="Content/RightPanel/VBox"]
@@ -113,7 +113,7 @@ layout_mode = 2
 
 [node name="LblBreakdown" type="Label" parent="Content/RightPanel/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 14
 text = "Деталізація результатів..."
 
 [node name="HSeparator2" type="HSeparator" parent="Content/RightPanel/VBox"]
@@ -121,6 +121,7 @@ layout_mode = 2
 
 [node name="LblComparison" type="Label" parent="Content/RightPanel/VBox"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 13
 autowrap_mode = 2
 text = "Порівняння з реальними місіями NASA..."
 
@@ -128,9 +129,95 @@ text = "Порівняння з реальними місіями NASA..."
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="BtnRestart" type="Button" parent="Content/RightPanel/VBox"]
-custom_minimum_size = Vector2(250, 52)
+[node name="LeaderboardBox" type="VBoxContainer" parent="Content/RightPanel/VBox"]
 layout_mode = 2
-size_flags_horizontal = 8
-theme_override_font_sizes/font_size = 18
-text = "Спроектувати нову місію"
+theme_override_constants/separation = 8
+
+[node name="HBoxSubmit" type="HBoxContainer" parent="Content/RightPanel/VBox/LeaderboardBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="EditCallsign" type="LineEdit" parent="Content/RightPanel/VBox/LeaderboardBox/HBoxSubmit"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Ваш позивний або ім'я командира..."
+
+[node name="BtnSubmit" type="Button" parent="Content/RightPanel/VBox/LeaderboardBox/HBoxSubmit"]
+custom_minimum_size = Vector2(210, 42)
+layout_mode = 2
+text = "Записати в лідерборд 🏆"
+
+[node name="LblSubmitStatus" type="Label" parent="Content/RightPanel/VBox/LeaderboardBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = ""
+
+[node name="HBoxActions" type="HBoxContainer" parent="Content/RightPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 2
+
+[node name="BtnShowLeaderboard" type="Button" parent="Content/RightPanel/VBox/HBoxActions"]
+custom_minimum_size = Vector2(230, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "🌍 ТОП-30 СВІТУ (РЕЙТИНГ)"
+
+[node name="BtnRestart" type="Button" parent="Content/RightPanel/VBox/HBoxActions"]
+custom_minimum_size = Vector2(220, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Нова місія ->"
+
+[node name="LeaderboardModal" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -250.0
+offset_right = 340.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="LeaderboardModal"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LblModalTitle" type="Label" parent="LeaderboardModal/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+text = "🏆 СВІТОВИЙ ЛІДЕРБОРД КОМАНДИРІВ"
+
+[node name="LblModalSubtitle" type="Label" parent="LeaderboardModal/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
+theme_override_font_sizes/font_size = 12
+horizontal_alignment = 1
+text = "Жива онлайн-таблиця рекордів між усіма гравцями"
+
+[node name="HSeparator" type="HSeparator" parent="LeaderboardModal/VBox"]
+layout_mode = 2
+
+[node name="ScrollEntries" type="ScrollContainer" parent="LeaderboardModal/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxEntries" type="VBoxContainer" parent="LeaderboardModal/VBox/ScrollEntries"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="BtnCloseModal" type="Button" parent="LeaderboardModal/VBox"]
+custom_minimum_size = Vector2(160, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Закрити"

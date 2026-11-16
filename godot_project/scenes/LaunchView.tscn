@@ -69,6 +69,46 @@ theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
 theme_override_font_sizes/font_size = 12
 text = "Дальність: 0.0 км | Тиск Q: 0.0 кПа"
 
+[node name="LaunchWindowPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 820.0
+offset_top = 25.0
+offset_right = 1250.0
+offset_bottom = 270.0
+
+[node name="VBox" type="VBoxContainer" parent="LaunchWindowPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LblWindowTitle" type="Label" parent="LaunchWindowPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 15
+text = "ОРБІТАЛЬНЕ ВІКНО СТАРТУ"
+
+[node name="LblTargetInfo" type="Label" parent="LaunchWindowPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Ціль: Марс | Син. період: 780 діб"
+
+[node name="SliderOffset" type="HSlider" parent="LaunchWindowPanel/VBox"]
+layout_mode = 2
+min_value = -30.0
+max_value = 30.0
+step = 1.0
+
+[node name="LblOffsetVal" type="Label" parent="LaunchWindowPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Дата старту: Т-0 (Оптимальна)"
+
+[node name="LblWindowStatus" type="Label" parent="LaunchWindowPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 2
+text = "Вирівнювання планет ідеальне. Витрата палива мінімальна."
+
 [node name="Controls" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 7

@@ -9,6 +9,12 @@ extends Control
 @onready var lbl_gforce = $Telemetry/VBox/LblGForce
 @onready var lbl_telemetry_details = $Telemetry/VBox/LblDetails
 @onready var flight_area = $FlightArea
+@onready var telemetry_panel = $Telemetry
+@onready var window_panel = $LaunchWindowPanel
+@onready var lbl_target_info = $LaunchWindowPanel/VBox/LblTargetInfo
+@onready var slider_offset = $LaunchWindowPanel/VBox/SliderOffset
+@onready var lbl_offset_val = $LaunchWindowPanel/VBox/LblOffsetVal
+@onready var lbl_window_status = $LaunchWindowPanel/VBox/LblWindowStatus
 
 var is_launching: bool = false
 var altitude_km: float = 0.0
@@ -24,6 +30,8 @@ var current_local_center_y: float = -75.0
 func _ready() -> void:
 	update_pad_alignment()
 	current_local_center_y = -75.0
+	telemetry_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 1))
+	_init_window_panel()
 	btn_start.pressed.connect(_on_start_pressed)
 	btn_next.pressed.connect(_on_next_pressed)
 	btn_next.visible = false
@@ -35,6 +43,34 @@ func _ready() -> void:
 
 	for i in range(70):
 		stars.append(Vector2(randf_range(20.0, 1260.0), randf_range(10.0, 400.0)))
+
+func _init_window_panel() -> void:
+	window_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 1))
+	var target_info = DataManager.get_target(GameState.target_id)
+	var t_name = DataManager.get_localized(target_info.get("name"), "Ціль")
+	var win = target_info.get("window", {})
+	var syn_d = int(win.get("synodic_days", 780))
+	lbl_target_info.text = "Ціль: %s | Синодичний період: %d діб" % [t_name, syn_d]
+	slider_offset.value = 0.0
+	slider_offset.value_changed.connect(_on_slider_changed)
+	_update_window_status(0)
+
+func _on_slider_changed(val: float) -> void:
+	_update_window_status(int(val))
+
+func _update_window_status(off: int) -> void:
+	if off == 0:
+		lbl_offset_val.text = "Дата старту: Т-0 (Оптимальна дата Гомана)"
+		lbl_window_status.text = "Ідеальне вирівнювання орбіт: dV мінімальний, 100% паливного запасу."
+		lbl_window_status.modulate = ThemeManager.accent_emerald
+	elif abs(off) <= 10:
+		lbl_offset_val.text = "Дата старту: %s%d діб від оптимуму" % ["+" if off > 0 else "", off]
+		lbl_window_status.text = "Допустиме вікно (+5% dV). Невеликі втрати палива."
+		lbl_window_status.modulate = ThemeManager.accent_amber
+	else:
+		lbl_offset_val.text = "Дата старту: %s%d діб від оптимуму" % ["+" if off > 0 else "", off]
+		lbl_window_status.text = "Неоптимальне вікно (+%d%% dV). Високий ризик дефіциту палива!" % [abs(off) * 2]
+		lbl_window_status.modulate = ThemeManager.accent_red
 
 func update_pad_alignment() -> void:
 	var rect = flight_area.get_viewport_rect()
@@ -144,6 +180,13 @@ func _process(delta: float) -> void:
 
 func _on_start_pressed() -> void:
 	SoundManager.play_click()
+	window_panel.visible = false
+	var off = int(slider_offset.value)
+	GameState.launch_window_offset = off
+	if off == 0:
+		GameState.flight_events_log.append("Старт у точне вікно Гомана: максимальна енергетична ефективність!")
+	else:
+		GameState.flight_events_log.append("Старт зі зміщенням %d діб: витрачено додаткове паливо." % [off])
 	is_launching = true
 	launch_timer = 0.0
 	btn_start.disabled = true
