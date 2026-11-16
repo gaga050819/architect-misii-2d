@@ -2,8 +2,8 @@ config_version=5
 
 [application]
 
-config/name="РђСЂС…С–С‚РµРєС‚РѕСЂ РјС–СЃС–С—"
-config/description="2D РіСЂР° Р· РґРёР·Р°Р№РЅСѓ РєРѕСЃРјС–С‡РЅРёС… РјС–СЃС–Р№ РЅР° СЂСѓС€С–С— Godot"
+config/name="Архітектор місії"
+config/description="2D гра з дизайну космічних місій на рушії Godot"
 run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0.04, 0.06, 0.09, 1)
