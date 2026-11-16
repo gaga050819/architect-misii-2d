@@ -474,6 +474,7 @@ func draw_first_stage(cfg: Dictionary, offset: Vector2, alpha: float = 1.0) -> v
 func draw_side_boosters(cfg: Dictionary, alpha: float = 1.0) -> void:
 	if alpha <= 0.01:
 		return
+	var r_id = cfg["id"]
 	var b_type = cfg["booster_type"]
 	var w = cfg["w"]
 	var bw = cfg["booster_w"]

@@ -137,7 +137,7 @@ func setup_platform_mode() -> void:
 
 	elif platform_type == "lander":
 		env_visual.is_orbit = false
-		vehicle_node.position.y = 520.0
+		vehicle_node.position.y = 494.0
 		rover_x = 640.0
 		vehicle_node.position.x = rover_x
 		env_visual.rover_x = rover_x
@@ -151,13 +151,14 @@ func setup_platform_mode() -> void:
 		btn_right.pressed.connect(_on_lander_seismic_pressed)
 
 		sample_spots = [
-			{"x": 640.0, "y": 520.0, "name": "Ґрунт майданчика посадки", "method": "drill", "science": 45.0, "taken": false}
+			{"x": 610.0, "y": 540.0, "name": "Ґрунт майданчика посадки", "method": "drill", "science": 45.0, "taken": false},
+			{"x": 670.0, "y": 540.0, "name": "Мікроаналіз пилу", "method": "micro", "science": 40.0, "taken": false}
 		]
 		lbl_target_hint.text = "Посадкова станція: проводьте наукові заміри інструментами"
 
 	else:
 		env_visual.is_orbit = false
-		vehicle_node.position.y = 520.0
+		vehicle_node.position.y = 507.0
 		rover_x = 200.0
 		vehicle_node.position.x = rover_x
 		env_visual.rover_x = rover_x
@@ -187,9 +188,11 @@ func setup_platform_mode() -> void:
 		)
 
 		sample_spots = [
-			{"x": 425.0, "y": 520.0, "name": "Базальтова скеля", "method": "laser", "science": 35.0, "taken": false},
-			{"x": 755.0, "y": 520.0, "name": "Кратерне оголення", "method": "drill", "science": 45.0, "taken": false},
-			{"x": 1055.0, "y": 520.0, "name": "Глинисті відклади", "method": "scoop", "science": 50.0, "taken": false}
+			{"x": 290.0, "y": 540.0, "name": "Георадарне зондування", "method": "gpr", "science": 35.0, "taken": false},
+			{"x": 425.0, "y": 538.0, "name": "Базальтова скеля", "method": "laser", "science": 35.0, "taken": false},
+			{"x": 620.0, "y": 538.0, "name": "Мікроструктура реголіту", "method": "micro", "science": 40.0, "taken": false},
+			{"x": 755.0, "y": 536.0, "name": "Кратерне оголення", "method": "drill", "science": 45.0, "taken": false},
+			{"x": 1055.0, "y": 537.0, "name": "Глинисті відклади", "method": "scoop", "science": 50.0, "taken": false}
 		]
 		lbl_target_hint.text = "Керуйте стрілками або кнопками для пошуку точок досліджень"
 
@@ -247,15 +250,26 @@ func _on_sample_pressed() -> void:
 			spot["taken"] = true
 			is_locked_anim = true
 			var method = spot["method"]
-			var origin_pt = vehicle_node.position + Vector2(0, -20)
-			var target_pt = Vector2(spot["x"], spot.get("y", 520.0))
+			var target_pt = Vector2(spot["x"], spot.get("y", 540.0))
+			var origin_pt: Vector2
+			if platform_type == "lander":
+				origin_pt = vehicle_node.position + Vector2(-22.0, 10.0)
+			elif platform_type == "orbiter" or platform_type == "sampler":
+				origin_pt = vehicle_node.position + Vector2(0.0, 15.0)
+			else:
+				var is_facing_left = target_pt.x < vehicle_node.position.x
+				var arm_side = -1.0 if is_facing_left else 1.0
+				if method == "laser":
+					origin_pt = vehicle_node.position + Vector2(arm_side * 18.0, -38.0)
+				else:
+					origin_pt = vehicle_node.position + Vector2(arm_side * 28.0, 14.0)
 
 			if method == "scan":
-				fx_visual.start_orbital_scan(origin_pt + Vector2(0, 15), target_pt)
+				fx_visual.start_orbital_scan(origin_pt, target_pt)
 				SoundManager.play_laser()
 				lbl_target_hint.text = "Орбітальний сканер: спектральний аналіз та картографування сектору..."
 			elif method == "laser":
-				fx_visual.start_laser(origin_pt + Vector2(10, -20), target_pt)
+				fx_visual.start_laser(origin_pt, target_pt)
 				SoundManager.play_laser()
 				lbl_target_hint.text = "Лазерна абляція: випаровування породи та спектральний аналіз..."
 			elif method == "drill":
@@ -263,9 +277,13 @@ func _on_sample_pressed() -> void:
 				SoundManager.play_drill()
 				lbl_target_hint.text = "Алмазне буріння: забір керна породи в герметичний контейнер..."
 			elif method == "micro":
-				fx_visual.start_microscopic(origin_pt)
+				fx_visual.start_microscopic(origin_pt, target_pt)
 				SoundManager.play_click()
 				lbl_target_hint.text = "Мікроскопічний аналіз: фотографування структури породи на рівні мкм..."
+			elif method == "gpr":
+				fx_visual.start_gpr(origin_pt, target_pt)
+				SoundManager.play_radio_chirp()
+				lbl_target_hint.text = "Підповерхневий георадар: імпульсне зондування шарів ґрунту..."
 			else:
 				fx_visual.start_scoop(origin_pt, target_pt)
 				SoundManager.play_click()

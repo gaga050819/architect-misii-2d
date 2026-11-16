@@ -128,15 +128,18 @@ func _draw() -> void:
 		if fmod(anim_time * 0.8, 3.0) < 0.25:
 			draw_circle(head_pos + Vector2(6.5 * s, 0), 4.5, Color(1.0, 0.3, 0.2, 0.75))
 
-		var arm_shoulder = Vector2(front_rect.position.x, center.y + 4.0 * s)
-		var arm_elbow = arm_shoulder + Vector2(-12.0 * s, 8.0 * s + sin(anim_time * 1.2) * 2.0 * s)
-		var arm_wrist = arm_elbow + Vector2(-10.0 * s, -4.0 * s + cos(anim_time * 1.2) * 2.0 * s)
-		draw_line(arm_shoulder, arm_elbow, metal_color, 3.5)
+		var arm_base = Vector2(front_rect.position.x, center.y + body_h * 0.5 - 2.0 * s)
+		var arm_shoulder = arm_base + Vector2(-3.0 * s, 2.0 * s)
+		var arm_elbow = arm_shoulder + Vector2(-10.0 * s, 12.0 * s + sin(anim_time * 1.2) * 1.5 * s)
+		var arm_wrist = arm_elbow + Vector2(-7.0 * s, 10.0 * s + cos(anim_time * 1.2) * 1.5 * s)
+		draw_line(arm_base, arm_shoulder, dark_metal, 4.0)
+		draw_line(arm_shoulder, arm_elbow, metal_color, 3.6)
 		draw_circle(arm_shoulder, 3.5 * s * 0.4, dark_metal)
 		draw_line(arm_elbow, arm_wrist, metal_color, 2.8)
 		draw_circle(arm_elbow, 3.0 * s * 0.4, dark_metal)
-		draw_rect(Rect2(arm_wrist.x - 3.0 * s, arm_wrist.y - 3.0 * s, 6.0 * s, 6.0 * s), dark_metal)
-		draw_line(arm_wrist, arm_wrist + Vector2(-4.0 * s, 3.0 * s), Color(0.85, 0.88, 0.92), 1.8)
+		draw_rect(Rect2(arm_wrist.x - 3.5 * s, arm_wrist.y - 3.0 * s, 7.0 * s, 6.0 * s), dark_metal)
+		draw_line(arm_wrist, arm_wrist + Vector2(0.0, 5.0 * s), Color(0.88, 0.92, 0.96), 2.2)
+		draw_circle(arm_wrist + Vector2(0.0, 5.5 * s), 1.6 * s, Color(0.95, 0.65, 0.25))
 
 	elif plat_type == "lander":
 		var r_hex = 22.0 * s

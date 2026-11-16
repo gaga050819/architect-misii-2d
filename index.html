@@ -7,58 +7,9 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 		<meta name="theme-color" content="#0a0f18">
-		<title>&#x410;&#x440;&#x445;&#x456;&#x442;&#x435;&#x43A;&#x442;&#x43E;&#x440; &#x43C;&#x456;&#x441;&#x456;&#x457; 2D</title>
+		<title>&#x410;&#x440;&#x445;&#x456;&#x442;&#x435;&#x43A;&#x442;&#x43E;&#x440; &#x43C;&#x456;&#x441;&#x456;&#x457;</title>
+		
 		<style>
-html, body {
-	width: 100%;
-	height: 100%;
-	height: 100dvh;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	overflow: hidden;
-	background-color: #0a0f18;
-	touch-action: none;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	user-select: none;
-	overscroll-behavior: none;
-}
-
-#canvas {
-	width: 100vw;
-	height: 100vh;
-	height: 100dvh;
-	display: block;
-	touch-action: none;
-}
-
-#portrait-advisory {
-	display: none;
-	position: fixed;
-	top: 0; left: 0; right: 0; bottom: 0;
-	z-index: 10000;
-	background: rgba(10, 15, 24, 0.94);
-	backdrop-filter: blur(8px);
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	padding: 24px;
-	box-sizing: border-box;
-}
-
-@keyframes rotatePhoneAnim {
-	0%, 20% { transform: rotate(0deg); }
-	50%, 70% { transform: rotate(90deg); }
-	100% { transform: rotate(0deg); }
-}
-
-@media (orientation: portrait) and (max-width: 900px) {
-	#portrait-advisory {
-		display: flex !important;
-	}
-}
-
 html, body, #canvas {
 	margin: 0;
 	padding: 0;
@@ -92,7 +43,7 @@ body {
 }
 
 #status {
-	background-color: #242424;
+	background-color: #0a0f17;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -143,6 +94,174 @@ body {
 	text-align: center;
 	z-index: 1;
 }
+		
+html, body {
+	width: 100%;
+	height: 100%;
+	height: 100dvh;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	background-color: #0a0f18;
+	touch-action: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+	overscroll-behavior: none;
+}
+
+#canvas {
+	width: 100vw;
+	height: 100vh;
+	height: 100dvh;
+	display: block;
+	touch-action: none;
+}
+
+#portrait-advisory {
+	display: none;
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	z-index: 10000;
+	background: rgba(10, 15, 24, 0.94);
+	backdrop-filter: blur(8px);
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 24px;
+	box-sizing: border-box;
+}
+
+@keyframes rotatePhoneAnim {
+	0% { transform: rotate(0deg); }
+	30% { transform: rotate(90deg); }
+	70% { transform: rotate(90deg); }
+	100% { transform: rotate(0deg); }
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+	#portrait-advisory {
+		display: flex !important;
+	}
+}
+
+#status {
+	background: #080d16;
+	background-image: radial-gradient(circle at 50% 40%, rgba(20, 45, 80, 0.6) 0%, rgba(8, 13, 22, 0.96) 75%);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+	z-index: 999;
+}
+
+#status-splash {
+	display: none !important;
+}
+
+#custom-splash {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	padding: 24px 32px;
+	border-radius: 20px;
+	background: rgba(14, 22, 38, 0.88);
+	border: 1px solid rgba(56, 189, 248, 0.28);
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65), 0 0 32px rgba(56, 189, 248, 0.12);
+	max-width: 90vw;
+	margin-bottom: 24px;
+	font-family: system-ui, -apple-system, sans-serif;
+}
+
+.splash-badge {
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 2px;
+	color: #38bdf8;
+	background: rgba(56, 189, 248, 0.12);
+	border: 1px solid rgba(56, 189, 248, 0.3);
+	padding: 4px 12px;
+	border-radius: 999px;
+	margin-bottom: 12px;
+}
+
+.splash-title {
+	font-size: clamp(20px, 4.8vw, 32px);
+	font-weight: 800;
+	letter-spacing: 2px;
+	margin: 0;
+	color: #f0f6fc;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.splash-line {
+	width: 120px;
+	height: 3px;
+	background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+	margin: 14px 0;
+}
+
+.splash-authors {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.splash-author-main {
+	font-size: clamp(14px, 3.2vw, 17px);
+	color: #cbd5e1;
+	font-weight: 500;
+}
+
+.splash-author-main span {
+	color: #38bdf8;
+	font-weight: 700;
+}
+
+.splash-author-sub {
+	font-size: clamp(12px, 2.6vw, 14px);
+	color: #94a3b8;
+	font-weight: 400;
+}
+
+.splash-author-sub span {
+	color: #e2e8f0;
+	font-weight: 600;
+}
+
+#splash-status-text {
+	margin-top: 18px;
+	font-size: 13px;
+	color: #38bdf8;
+	letter-spacing: 0.5px;
+}
+
+#status-progress {
+	width: min(340px, 80vw);
+	height: 8px;
+	border-radius: 4px;
+	overflow: hidden;
+	background: rgba(255, 255, 255, 0.1);
+	border: none;
+}
+
+#status-progress::-webkit-progress-bar {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+#status-progress::-webkit-progress-value {
+	background: linear-gradient(90deg, #0ea5e9, #38bdf8, #34d399);
+	border-radius: 4px;
+}
+
+#status-progress::-moz-progress-bar {
+	background: linear-gradient(90deg, #0ea5e9, #38bdf8, #34d399);
+	border-radius: 4px;
+}
+
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
@@ -150,13 +269,14 @@ body {
 	</head>
 	<body><div style="position:fixed;top:10px;right:12px;z-index:9999;display:flex;gap:8px;align-items:center;">
 <button onclick="toggleMobileFullscreen()" style="background:rgba(12,22,36,0.85);color:#00e5ff;border:1px solid rgba(0,229,255,0.4);border-radius:8px;padding:6px 12px;font-family:system-ui,-apple-system,sans-serif;font-size:12px;cursor:pointer;backdrop-filter:blur(6px);touch-action:manipulation;">&#x26F6; &#x41F;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x435;&#x43A;&#x440;&#x430;&#x43D;</button>
+<a href="classic.html" style="background:rgba(0,90,180,0.85);color:#fff;padding:6px 14px;border-radius:8px;text-decoration:none;font-family:system-ui,-apple-system,sans-serif;font-size:12px;border:1px solid rgba(100,180,255,0.4);backdrop-filter:blur(6px);">&#x41A;&#x43B;&#x430;&#x441;&#x438;&#x447;&#x43D;&#x430; &#x432;&#x435;&#x440;&#x441;&#x456;&#x44F; (HTML5) &#x2197;</a>
 </div><div id="portrait-advisory">
 	<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2" style="animation: rotatePhoneAnim 2.5s infinite ease-in-out;">
 		<rect x="5" y="2" width="14" height="20" rx="2.5"/>
 		<path d="M12 18h.01M9 6h6"/>
 	</svg>
 	<div style="margin-top:16px;font-family:system-ui,-apple-system,sans-serif;font-size:17px;font-weight:600;color:#ffffff;text-align:center;">
-		&#x41F;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x456;&#x442;&#x44C; &#x441;&#x43C;&#x430;&#x440;&#x442;&#x444;&#x43E;&#x43D;
+		&#x41F;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x435;&#x43A;&#x440;&#x430;&#x43D;
 	</div>
 	<div style="margin-top:8px;font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:#8ab4f8;text-align:center;max-width:280px;line-height:1.4;">
 		&#x414;&#x43B;&#x44F; &#x437;&#x440;&#x443;&#x447;&#x43D;&#x43E;&#x457; &#x433;&#x440;&#x438; &#x43F;&#x435;&#x440;&#x435;&#x432;&#x435;&#x434;&#x456;&#x442;&#x44C; &#x43F;&#x440;&#x438;&#x441;&#x442;&#x440;&#x456;&#x439; &#x443; &#x433;&#x43E;&#x440;&#x438;&#x437;&#x43E;&#x43D;&#x442;&#x430;&#x43B;&#x44C;&#x43D;&#x438;&#x439; &#x440;&#x435;&#x436;&#x438;&#x43C; (Landscape)
@@ -171,14 +291,23 @@ body {
 		</noscript>
 
 		<div id="status">
-			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
+			<div id="custom-splash">
+				<div class="splash-badge">&#x1F680; 2D &#x421;&#x418;&#x41C;&#x423;&#x41B;&#x42F;&#x422;&#x41E;&#x420;</div>
+				<h1 class="splash-title">&#x410;&#x420;&#x425;&#x406;&#x422;&#x415;&#x41A;&#x422;&#x41E;&#x420; &#x41C;&#x406;&#x421;&#x406;&#x407; 2D</h1>
+				<div class="splash-line"></div>
+				<div class="splash-authors">
+					<div class="splash-author-main">&#x421;&#x442;&#x432;&#x43E;&#x440;&#x438;&#x432; 2D &#x433;&#x440;&#x443;: <span>&#x406;&#x432;&#x430;&#x43D;&#x446;&#x456;&#x432; &#x41C;&#x430;&#x440;&#x43A;&#x456;&#x44F;&#x43D;</span></div>
+					<div class="splash-author-sub">&#x421;&#x442;&#x432;&#x43E;&#x440;&#x44E;&#x432;&#x430;&#x447; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x438; &#x433;&#x440;&#x438;: <span>&#x420;&#x43E;&#x43C;&#x430;&#x43D; &#x411;&#x456;&#x43B;&#x438;&#x439;</span></div>
+				</div>
+				<div id="splash-status-text">&#x417;&#x430;&#x432;&#x430;&#x43D;&#x442;&#x430;&#x436;&#x435;&#x43D;&#x43D;&#x44F; &#x43A;&#x43E;&#x441;&#x43C;&#x456;&#x447;&#x43D;&#x438;&#x445; &#x441;&#x438;&#x441;&#x442;&#x435;&#x43C;...</div>
+			</div>
 			<progress id="status-progress"></progress>
 			<div id="status-notice"></div>
 		</div>
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":47565636,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":48003336,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -271,6 +400,9 @@ const engine = new Engine(GODOT_CONFIG);
 				if (current > 0 && total > 0) {
 					statusProgress.value = current;
 					statusProgress.max = total;
+					var pct = Math.round((current / total) * 100);
+					var txt = document.getElementById('splash-status-text');
+					if (txt) { txt.textContent = '\u0417\u0430\u0432\u0430\u043D\u0442\u0430\u0436\u0435\u043D\u043D\u044F... ' + pct + '%'; }
 				} else {
 					statusProgress.removeAttribute('value');
 					statusProgress.removeAttribute('max');
@@ -282,6 +414,7 @@ const engine = new Engine(GODOT_CONFIG);
 	}
 }());
 		</script>
+	
 	<script>
 function toggleMobileFullscreen() {
 	if (!document.fullscreenElement && !document.webkitFullscreenElement) {
