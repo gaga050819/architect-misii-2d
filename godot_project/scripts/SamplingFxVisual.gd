@@ -1,4 +1,4 @@
-extends Node2D
+﻿extends Node2D
 
 var anim_type: String = "none"
 var anim_time: float = 0.0
@@ -214,7 +214,7 @@ func draw_drill_sequence() -> void:
 		reach = clamp(1.0 - ((t - 2.9) / 0.9), 0.0, 1.0)
 
 	var ground_contact = target_pos
-	var arm_end = origin_pos.lerp(ground_contact + Vector2(0.0, -14.0), reach)
+	var arm_end = origin_pos.lerp(ground_contact + Vector2(0.0, 2.0), reach)
 	var mid = origin_pos.lerp(arm_end, 0.48)
 	var elbow = mid + Vector2((ground_contact.x - origin_pos.x) * 0.1, -38.0 * reach)
 
@@ -281,7 +281,7 @@ func draw_scoop_sequence() -> void:
 		reach = clamp(1.0 - ((t - 2.3) / 1.3), 0.0, 1.0)
 
 	var ground_contact = target_pos
-	var scoop_end = origin_pos.lerp(ground_contact + Vector2(0.0, -8.0), reach)
+	var scoop_end = origin_pos.lerp(ground_contact + Vector2(0.0, 2.0), reach)
 	var mid = origin_pos.lerp(scoop_end, 0.5)
 	var elbow = mid + Vector2((target_pos.x - origin_pos.x) * 0.1, -40.0 * reach)
 
