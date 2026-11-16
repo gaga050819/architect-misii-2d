@@ -68,6 +68,7 @@ func setup_platform_mode() -> void:
 
 		btn_left.button_down.connect(func(): move_dir = -1.0)
 		btn_left.button_up.connect(func(): move_dir = 0.0)
+		btn_left.mouse_exited.connect(func(): move_dir = 0.0)
 		btn_left.pressed.connect(func():
 			rover_x = clamp(rover_x - 45.0, 80.0, 1200.0)
 			vehicle_node.position.x = rover_x
@@ -77,6 +78,7 @@ func setup_platform_mode() -> void:
 		)
 		btn_right.button_down.connect(func(): move_dir = 1.0)
 		btn_right.button_up.connect(func(): move_dir = 0.0)
+		btn_right.mouse_exited.connect(func(): move_dir = 0.0)
 		btn_right.pressed.connect(func():
 			rover_x = clamp(rover_x + 45.0, 80.0, 1200.0)
 			vehicle_node.position.x = rover_x
@@ -107,6 +109,7 @@ func setup_platform_mode() -> void:
 
 		btn_left.button_down.connect(func(): move_dir = -1.0)
 		btn_left.button_up.connect(func(): move_dir = 0.0)
+		btn_left.mouse_exited.connect(func(): move_dir = 0.0)
 		btn_left.pressed.connect(func():
 			rover_x = clamp(rover_x - 45.0, 80.0, 1200.0)
 			vehicle_node.position.x = rover_x
@@ -116,6 +119,7 @@ func setup_platform_mode() -> void:
 		)
 		btn_right.button_down.connect(func(): move_dir = 1.0)
 		btn_right.button_up.connect(func(): move_dir = 0.0)
+		btn_right.mouse_exited.connect(func(): move_dir = 0.0)
 		btn_right.pressed.connect(func():
 			rover_x = clamp(rover_x + 45.0, 80.0, 1200.0)
 			vehicle_node.position.x = rover_x

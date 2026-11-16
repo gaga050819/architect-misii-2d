@@ -24,6 +24,7 @@ func _ready() -> void:
 
 	GameState.phase_changed.connect(_on_phase_changed)
 	GameState.state_changed.connect(_on_state_changed)
+	get_tree().root.size_changed.connect(_on_viewport_resized)
 	_on_phase_changed(GameState.current_phase)
 	apply_theme_styling()
 	update_phase_buttons()
@@ -64,6 +65,10 @@ func _on_phase_changed(phase_name: String) -> void:
 func _on_state_changed() -> void:
 	update_phase_buttons()
 
+func _on_viewport_resized() -> void:
+	apply_theme_styling()
+	update_phase_buttons()
+
 func update_phase_buttons() -> void:
 	var phase_names = ["briefing", "assembly", "launch", "cruise", "landing", "surface", "debrief"]
 	var text_col = ThemeManager.get_text_color()
@@ -71,24 +76,55 @@ func update_phase_buttons() -> void:
 	var is_orbiter = str(platform.get("type", "rover")) == "orbiter" or GameState.platform_id == "sampler"
 	var current_idx = phase_names.find(GameState.current_phase)
 
+	var vp_w = get_viewport_rect().size.x
+	var is_compact = vp_w < 1060.0
+	var is_tiny = vp_w < 840.0
+
+	var title_lbl = $TopBar/HBox/LblGameTitle
+	if title_lbl:
+		if is_tiny:
+			title_lbl.visible = false
+		else:
+			title_lbl.visible = true
+			title_lbl.text = "АРХІТЕКТОР 2D" if is_compact else "АРХІТЕКТОР МІСІЇ 2D"
+
+	var pad_h = 4 if is_tiny else (6 if is_compact else 12)
+	var font_sz = 10 if is_tiny else (11 if is_compact else 13)
+
 	for i in range(phase_buttons_container.get_child_count()):
 		var btn = phase_buttons_container.get_child(i) as Button
 		if btn and i < phase_names.size():
 			var p_name = phase_names[i]
-			if i == 4:
-				btn.text = "5. Вихід на орбіту" if is_orbiter else "5. Посадка"
-			elif i == 5:
-				btn.text = "6. Орбіта" if is_orbiter else "6. Поверхня"
+			if is_compact:
+				match i:
+					0: btn.text = "1. Ціль"
+					1: btn.text = "2. Збірка"
+					2: btn.text = "3. Старт"
+					3: btn.text = "4. Переліт"
+					4: btn.text = "5. Орбіта" if is_orbiter else "5. Посадка"
+					5: btn.text = "6. Орбіта" if is_orbiter else "6. Поверхня"
+					6: btn.text = "7. Звіт"
+			else:
+				match i:
+					0: btn.text = "1. Ціль"
+					1: btn.text = "2. Конструктор"
+					2: btn.text = "3. Старт"
+					3: btn.text = "4. Переліт"
+					4: btn.text = "5. Вихід на орбіту" if is_orbiter else "5. Посадка"
+					5: btn.text = "6. Орбіта" if is_orbiter else "6. Поверхня"
+					6: btn.text = "7. Підсумок"
+
+			btn.add_theme_font_size_override("font_size", font_sz)
 
 			var is_active = (p_name == GameState.current_phase)
 			var is_past = (current_idx != -1 and i < current_idx)
 
 			var sb = StyleBoxFlat.new()
 			sb.set_corner_radius_all(8)
-			sb.content_margin_left = 12
-			sb.content_margin_right = 12
-			sb.content_margin_top = 5
-			sb.content_margin_bottom = 5
+			sb.content_margin_left = pad_h
+			sb.content_margin_right = pad_h
+			sb.content_margin_top = 4
+			sb.content_margin_bottom = 4
 
 			if is_active:
 				sb.bg_color = Color(0.18, 0.94, 0.58, 0.22)

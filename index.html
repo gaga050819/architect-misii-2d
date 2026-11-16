@@ -2,9 +2,63 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="theme-color" content="#0a0f18">
 		<title>&#x410;&#x440;&#x445;&#x456;&#x442;&#x435;&#x43A;&#x442;&#x43E;&#x440; &#x43C;&#x456;&#x441;&#x456;&#x457; 2D</title>
 		<style>
+html, body {
+	width: 100%;
+	height: 100%;
+	height: 100dvh;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+	background-color: #0a0f18;
+	touch-action: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+	overscroll-behavior: none;
+}
+
+#canvas {
+	width: 100vw;
+	height: 100vh;
+	height: 100dvh;
+	display: block;
+	touch-action: none;
+}
+
+#portrait-advisory {
+	display: none;
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	z-index: 10000;
+	background: rgba(10, 15, 24, 0.94);
+	backdrop-filter: blur(8px);
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 24px;
+	box-sizing: border-box;
+}
+
+@keyframes rotatePhoneAnim {
+	0%, 20% { transform: rotate(0deg); }
+	50%, 70% { transform: rotate(90deg); }
+	100% { transform: rotate(0deg); }
+}
+
+@media (orientation: portrait) and (max-width: 900px) {
+	#portrait-advisory {
+		display: flex !important;
+	}
+}
+
 html, body, #canvas {
 	margin: 0;
 	padding: 0;
@@ -94,7 +148,20 @@ body {
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 
 	</head>
-	<body>
+	<body><div style="position:fixed;top:10px;right:12px;z-index:9999;display:flex;gap:8px;align-items:center;">
+<button onclick="toggleMobileFullscreen()" style="background:rgba(12,22,36,0.85);color:#00e5ff;border:1px solid rgba(0,229,255,0.4);border-radius:8px;padding:6px 12px;font-family:system-ui,-apple-system,sans-serif;font-size:12px;cursor:pointer;backdrop-filter:blur(6px);touch-action:manipulation;">&#x26F6; &#x41F;&#x43E;&#x432;&#x43D;&#x438;&#x439; &#x435;&#x43A;&#x440;&#x430;&#x43D;</button>
+</div><div id="portrait-advisory">
+	<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2" style="animation: rotatePhoneAnim 2.5s infinite ease-in-out;">
+		<rect x="5" y="2" width="14" height="20" rx="2.5"/>
+		<path d="M12 18h.01M9 6h6"/>
+	</svg>
+	<div style="margin-top:16px;font-family:system-ui,-apple-system,sans-serif;font-size:17px;font-weight:600;color:#ffffff;text-align:center;">
+		&#x41F;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x456;&#x442;&#x44C; &#x441;&#x43C;&#x430;&#x440;&#x442;&#x444;&#x43E;&#x43D;
+	</div>
+	<div style="margin-top:8px;font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:#8ab4f8;text-align:center;max-width:280px;line-height:1.4;">
+		&#x414;&#x43B;&#x44F; &#x437;&#x440;&#x443;&#x447;&#x43D;&#x43E;&#x457; &#x433;&#x440;&#x438; &#x43F;&#x435;&#x440;&#x435;&#x432;&#x435;&#x434;&#x456;&#x442;&#x44C; &#x43F;&#x440;&#x438;&#x441;&#x442;&#x440;&#x456;&#x439; &#x443; &#x433;&#x43E;&#x440;&#x438;&#x437;&#x43E;&#x43D;&#x442;&#x430;&#x43B;&#x44C;&#x43D;&#x438;&#x439; &#x440;&#x435;&#x436;&#x438;&#x43C; (Landscape)
+	</div>
+</div>
 		<canvas id="canvas">
 			Your browser does not support the canvas tag.
 		</canvas>
@@ -111,7 +178,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":47587380,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":47565636,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -215,6 +282,19 @@ const engine = new Engine(GODOT_CONFIG);
 	}
 }());
 		</script>
-	</body>
+	<script>
+function toggleMobileFullscreen() {
+	if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+		var el = document.documentElement;
+		if (el.requestFullscreen) { el.requestFullscreen(); }
+		else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); }
+	} else {
+		if (document.exitFullscreen) { document.exitFullscreen(); }
+		else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+	}
+}
+window.addEventListener('touchstart', function() {}, {passive: true});
+document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
+</script></body>
 </html>
 

@@ -76,10 +76,24 @@ func _ready() -> void:
 
 	btn_thrust_up.button_down.connect(func(): is_thrust_key = true)
 	btn_thrust_up.button_up.connect(func(): is_thrust_key = false)
+	btn_thrust_up.mouse_exited.connect(func(): is_thrust_key = false)
 	btn_thrust_left.button_down.connect(func(): is_left_key = true)
 	btn_thrust_left.button_up.connect(func(): is_left_key = false)
+	btn_thrust_left.mouse_exited.connect(func(): is_left_key = false)
 	btn_thrust_right.button_down.connect(func(): is_right_key = true)
 	btn_thrust_right.button_up.connect(func(): is_right_key = false)
+	btn_thrust_right.mouse_exited.connect(func(): is_right_key = false)
+
+	var vp_w = get_viewport_rect().size.x
+	if vp_w < 1050.0:
+		btn_thrust_left.text = "<- Вліво"
+		btn_thrust_up.text = "▲ ТЯГА"
+		btn_thrust_right.text = "Вправо ->"
+		btn_chute.text = "Парашут"
+		btn_thrust_up.custom_minimum_size.y = 54
+		btn_thrust_left.custom_minimum_size.y = 54
+		btn_thrust_right.custom_minimum_size.y = 54
+		btn_chute.custom_minimum_size.y = 54
 
 	ThemeManager.theme_changed.connect(func(_v): apply_theme())
 	apply_theme()

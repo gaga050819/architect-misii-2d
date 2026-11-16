@@ -47,7 +47,9 @@ func _ready() -> void:
 	btn_launch.pressed.connect(_on_launch_pressed)
 	GameState.state_changed.connect(update_ui)
 	ThemeManager.theme_changed.connect(_on_theme_changed)
+	get_tree().root.size_changed.connect(_on_viewport_resized)
 
+	_on_viewport_resized()
 	apply_liquid_glass_styles()
 	update_category_buttons()
 	populate_items()
@@ -555,3 +557,10 @@ func _fmt_mbps(mbps: float) -> String:
 func _on_launch_pressed() -> void:
 	SoundManager.play_success()
 	GameState.set_phase("launch")
+
+func _on_viewport_resized() -> void:
+	var vp_w = get_viewport_rect().size.x
+	if vp_w < 1050.0:
+		left_panel.custom_minimum_size.x = max(380.0, vp_w * 0.48)
+	else:
+		left_panel.custom_minimum_size.x = 520.0
