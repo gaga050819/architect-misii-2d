@@ -166,13 +166,13 @@ func _init_custom_rocket_mode() -> void:
 	custom_controls_box.add_child(bottom_bar)
 
 	btn_steer_left = Button.new()
-	btn_steer_left.text = "◀ [A]"
+	btn_steer_left.text = "<- [A]"
 	btn_steer_left.custom_minimum_size = Vector2(80, 48)
 	btn_steer_left.pressed.connect(func(): current_pitch_deg = max(-45.0, current_pitch_deg - 3.0))
 	bottom_bar.add_child(btn_steer_left)
 
 	btn_steer_right = Button.new()
-	btn_steer_right.text = "[D] ▶"
+	btn_steer_right.text = "[D] ->"
 	btn_steer_right.custom_minimum_size = Vector2(80, 48)
 	btn_steer_right.pressed.connect(func(): current_pitch_deg = min(90.0, current_pitch_deg + 3.0))
 	bottom_bar.add_child(btn_steer_right)
@@ -184,7 +184,7 @@ func _init_custom_rocket_mode() -> void:
 	bottom_bar.add_child(btn_sas)
 
 	btn_stage = Button.new()
-	btn_stage.text = "🚀 СТУПІНЬ (Space)"
+	btn_stage.text = "СТУПІНЬ (Space)"
 	btn_stage.custom_minimum_size = Vector2(160, 48)
 	btn_stage.pressed.connect(_on_custom_stage_triggered)
 	var stage_style = StyleBoxFlat.new()
@@ -194,7 +194,7 @@ func _init_custom_rocket_mode() -> void:
 	bottom_bar.add_child(btn_stage)
 
 	btn_map_toggle = Button.new()
-	btn_map_toggle.text = "🗺️ КАРТА (M)"
+	btn_map_toggle.text = "КАРТА (M)"
 	btn_map_toggle.custom_minimum_size = Vector2(130, 48)
 	btn_map_toggle.pressed.connect(_toggle_map_view)
 	bottom_bar.add_child(btn_map_toggle)
@@ -206,7 +206,7 @@ func _init_custom_rocket_mode() -> void:
 	bottom_bar.add_child(btn_time_warp)
 
 	btn_reset = Button.new()
-	btn_reset.text = "🔄 В ЦЕХ"
+	btn_reset.text = "В ЦЕХ"
 	btn_reset.custom_minimum_size = Vector2(80, 48)
 	btn_reset.pressed.connect(func(): GameState.set_phase("custom_builder"))
 	bottom_bar.add_child(btn_reset)
@@ -255,7 +255,7 @@ func _toggle_map_view() -> void:
 	if map_view_node:
 		map_view_node.visible = is_map_active
 	if btn_map_toggle:
-		btn_map_toggle.text = "📹 КАМЕРА (M)" if is_map_active else "🗺️ КАРТА (M)"
+		btn_map_toggle.text = "КАМЕРА (M)" if is_map_active else "КАРТА (M)"
 
 func _on_custom_stage_triggered() -> void:
 	SoundManager.play_click()
@@ -478,7 +478,7 @@ func _process_custom_flight(delta: float) -> void:
 	lbl_telemetry_details.text = "Дальність: %.1f км | Тиск Q: %.1f кПа | Т: %.0f K" % [downrange_km, q_press_kpa, hull_temp_k]
 
 	if bool(orb.get("is_stable_orbit", false)):
-		lbl_status.text = "🎉 СТАБІЛЬНА ОРБІТА LEO ЗАКРИТА! Готовність до міжпланетного перельоту."
+		lbl_status.text = "СТАБІЛЬНА ОРБІТА LEO ЗАКРИТА! Готовність до міжпланетного перельоту."
 		lbl_status.modulate = ThemeManager.accent_emerald
 		btn_next.visible = true
 	elif altitude_km > 100.0:

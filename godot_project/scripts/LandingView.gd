@@ -87,7 +87,7 @@ func _ready() -> void:
 	var vp_w = get_viewport_rect().size.x
 	if vp_w < 1050.0:
 		btn_thrust_left.text = "<- Вліво"
-		btn_thrust_up.text = "▲ ТЯГА"
+		btn_thrust_up.text = "ТЯГА"
 		btn_thrust_right.text = "Вправо ->"
 		btn_chute.text = "Парашут"
 		btn_thrust_up.custom_minimum_size.y = 54

@@ -38,7 +38,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 14
-text = "🚀 БЛОКОВИЙ КОНСТРУКТОР РАКЕТ (SFS РЕЖИМ)"
+text = "БЛОКОВИЙ КОНСТРУКТОР РАКЕТ (SFS РЕЖИМ)"
 vertical_alignment = 1
 
 [node name="BtnSample" type="Button" parent="TopBar/HBox"]
@@ -116,22 +116,22 @@ theme_override_constants/separation = 6
 [node name="BtnMoveUp" type="Button" parent="Content/CenterPanel/Toolbar"]
 custom_minimum_size = Vector2(36, 32)
 layout_mode = 2
-text = "▲"
+text = "^"
 
 [node name="BtnMoveDown" type="Button" parent="Content/CenterPanel/Toolbar"]
 custom_minimum_size = Vector2(36, 32)
 layout_mode = 2
-text = "▼"
+text = "v"
 
 [node name="BtnMoveLeft" type="Button" parent="Content/CenterPanel/Toolbar"]
 custom_minimum_size = Vector2(36, 32)
 layout_mode = 2
-text = "◄"
+text = "<"
 
 [node name="BtnMoveRight" type="Button" parent="Content/CenterPanel/Toolbar"]
 custom_minimum_size = Vector2(36, 32)
 layout_mode = 2
-text = "►"
+text = ">"
 
 [node name="BtnDelete" type="Button" parent="Content/CenterPanel/Toolbar"]
 custom_minimum_size = Vector2(70, 32)
@@ -217,7 +217,7 @@ text = "Тепловий щит:"
 [node name="LblHeatVal" type="Label" parent="BottomHUD/HBoxMain/VBoxHeat"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "Відсутній ⚠️"
+text = "Відсутній (!)"
 
 [node name="LblStatusHint" type="Label" parent="BottomHUD/HBoxMain"]
 layout_mode = 2
@@ -232,4 +232,4 @@ custom_minimum_size = Vector2(180, 44)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 15
-text = "До запуску 🚀"
+text = "До запуску ->"

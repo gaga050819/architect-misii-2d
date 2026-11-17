@@ -279,7 +279,7 @@ func recalculate_physics() -> void:
 		lbl_heat_val.text = "Є (" + str(int(stats["max_temp_k"])) + " K)"
 		lbl_heat_val.modulate = ThemeManager.accent_emerald
 	else:
-		lbl_heat_val.text = "Відсутній ⚠️"
+		lbl_heat_val.text = "Відсутній (!)"
 		lbl_heat_val.modulate = ThemeManager.accent_red
 
 	if not stats["has_control"]:

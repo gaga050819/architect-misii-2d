@@ -168,7 +168,7 @@ func _build_comparison_text(score: int) -> void:
 	else:
 		comp_text += "Зонд успішно виконав високоточне картографування та забір реголіту у стилі місії OSIRIS-REx."
 	if GameState.is_custom_rocket:
-		comp_text += "\n\n🚀 РАКЕТА-НОСІЙ: Власна блокова конструкція (SFS режим). Повністю відповідає формулі Ціолковського та законам Кеплера!"
+		comp_text += "\n\nРАКЕТА-НОСІЙ: Власна блокова конструкція (SFS режим). Повністю відповідає формулі Ціолковського та законам Кеплера!"
 	lbl_comparison.text = comp_text
 
 func _on_submit_pressed() -> void:

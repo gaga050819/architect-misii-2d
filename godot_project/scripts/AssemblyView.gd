@@ -597,7 +597,7 @@ func create_custom_builder_banner() -> PanelContainer:
 	hbox.add_child(vbox)
 
 	var lbl_title = Label.new()
-	lbl_title.text = "🛠️ БЛОКОВИЙ КОНСТРУКТОР (SFS РЕЖИМ)"
+	lbl_title.text = "БЛОКОВИЙ КОНСТРУКТОР (SFS РЕЖИМ)"
 	lbl_title.add_theme_font_size_override("font_size", 13)
 	lbl_title.add_theme_color_override("font_color", ThemeManager.accent_cyan)
 	vbox.add_child(lbl_title)
