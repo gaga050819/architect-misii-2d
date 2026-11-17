@@ -36,18 +36,25 @@ var thrust_n: float = 600000.0
 var isp_s: float = 300.0
 var aero_cd: float = 0.25
 var current_pitch_deg: float = 0.0
+var ang_vel_deg: float = 0.0
 var throttle_val: float = 1.0
 var sas_mode: String = "MANUAL"
 var vx_ms: float = 0.0
 var vy_ms: float = 0.0
 var x_pos_m: float = 0.0
 var y_pos_m: float = 0.0
+var max_alt_reached_m: float = 0.0
 var time_warp: float = 1.0
 var staging_step: int = 0
 var hull_temp_k: float = 293.0
 var ablation_kg: float = 300.0
 var map_view_node: Control = null
 var is_map_active: bool = false
+var is_crashed: bool = false
+var custom_ground_offset: float = 0.0
+
+var is_steer_left_held: bool = false
+var is_steer_right_held: bool = false
 
 var custom_controls_box: Control = null
 var slider_throttle: VSlider = null
@@ -102,6 +109,9 @@ func _init_custom_rocket_mode() -> void:
 	isp_s = max(200.0, float(custom_stats.get("avg_isp", 280.0)))
 	aero_cd = max(0.08, float(custom_stats.get("cd", 0.2)))
 	ablation_kg = float(custom_stats.get("ablation_t", 0.2)) * 1000.0
+
+	if custom_controls_box:
+		return
 
 	custom_controls_box = Control.new()
 	custom_controls_box.name = "CustomSfsControls"
@@ -168,13 +178,17 @@ func _init_custom_rocket_mode() -> void:
 	btn_steer_left = Button.new()
 	btn_steer_left.text = "<- [A]"
 	btn_steer_left.custom_minimum_size = Vector2(80, 48)
-	btn_steer_left.pressed.connect(func(): current_pitch_deg = max(-45.0, current_pitch_deg - 3.0))
+	btn_steer_left.button_down.connect(func(): is_steer_left_held = true)
+	btn_steer_left.button_up.connect(func(): is_steer_left_held = false)
+	btn_steer_left.mouse_exited.connect(func(): is_steer_left_held = false)
 	bottom_bar.add_child(btn_steer_left)
 
 	btn_steer_right = Button.new()
 	btn_steer_right.text = "[D] ->"
 	btn_steer_right.custom_minimum_size = Vector2(80, 48)
-	btn_steer_right.pressed.connect(func(): current_pitch_deg = min(90.0, current_pitch_deg + 3.0))
+	btn_steer_right.button_down.connect(func(): is_steer_right_held = true)
+	btn_steer_right.button_up.connect(func(): is_steer_right_held = false)
+	btn_steer_right.mouse_exited.connect(func(): is_steer_right_held = false)
 	bottom_bar.add_child(btn_steer_right)
 
 	btn_sas = Button.new()
@@ -208,8 +222,40 @@ func _init_custom_rocket_mode() -> void:
 	btn_reset = Button.new()
 	btn_reset.text = "В ЦЕХ"
 	btn_reset.custom_minimum_size = Vector2(80, 48)
-	btn_reset.pressed.connect(func(): GameState.set_phase("custom_builder"))
+	btn_reset.pressed.connect(_on_reset_pressed)
 	bottom_bar.add_child(btn_reset)
+
+func _on_reset_pressed() -> void:
+	if is_crashed:
+		_restart_custom_launch()
+	else:
+		GameState.set_phase("custom_builder")
+
+func _restart_custom_launch() -> void:
+	is_crashed = false
+	is_launching = false
+	y_pos_m = 0.0
+	x_pos_m = 0.0
+	vx_ms = 0.0
+	vy_ms = 0.0
+	ang_vel_deg = 0.0
+	current_pitch_deg = 0.0
+	throttle_val = 1.0
+	launch_timer = 0.0
+	max_alt_reached_m = 0.0
+	custom_ground_offset = 0.0
+	staging_step = 0
+	rocket_visual.staging_stage = 0
+	rocket_visual.visible = true
+	rocket_visual.rotation_degrees = 0.0
+	rocket_visual.thrust_power = 0.0
+	_init_custom_rocket_mode()
+	update_pad_alignment()
+	btn_start.visible = true
+	btn_reset.text = "В ЦЕХ"
+	btn_reset.modulate = Color.WHITE
+	lbl_status.text = "Готовність до повторного старту. Натисніть СТАРТ."
+	lbl_status.modulate = ThemeManager.accent_cyan
 
 func _set_throttle(val: float) -> void:
 	throttle_val = clamp(val, 0.0, 1.0)
@@ -364,8 +410,12 @@ func update_pad_alignment() -> void:
 	var pad_x = rect.size.x * 0.5
 	var ground_y = rect.size.y - 75.0
 	var table_top_y = ground_y - 14.0
-	initial_rocket_pos = Vector2(pad_x, table_top_y - 8.0)
-	if not is_launching:
+	if is_custom and rocket_visual.has_method("get_custom_rocket_height"):
+		var pivot_y = rocket_visual.get_custom_rocket_height() * 0.5
+		initial_rocket_pos = Vector2(pad_x, table_top_y - pivot_y)
+	else:
+		initial_rocket_pos = Vector2(pad_x, table_top_y - 8.0)
+	if not is_launching and not is_crashed:
 		rocket_visual.position = initial_rocket_pos
 
 func _process(delta: float) -> void:
@@ -381,6 +431,9 @@ func _process(delta: float) -> void:
 		_process_classic_flight(delta)
 
 func _process_custom_flight(delta: float) -> void:
+	if is_crashed:
+		return
+
 	launch_timer += delta
 	if launch_timer < 2.5:
 		var count = 3 - int(launch_timer)
@@ -391,22 +444,35 @@ func _process_custom_flight(delta: float) -> void:
 
 	var dt = delta * time_warp
 
-	if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT):
-		current_pitch_deg = max(-45.0, current_pitch_deg - 25.0 * dt)
-	elif Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT):
-		current_pitch_deg = min(90.0, current_pitch_deg + 25.0 * dt)
-	elif Input.is_key_pressed(KEY_SHIFT):
-		_set_throttle(throttle_val + 0.3 * dt)
+	var steer_input = 0.0
+	if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT) or is_steer_left_held:
+		steer_input -= 1.0
+	if Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT) or is_steer_right_held:
+		steer_input += 1.0
+
+	if Input.is_key_pressed(KEY_SHIFT):
+		_set_throttle(throttle_val + 0.4 * dt)
 	elif Input.is_key_pressed(KEY_CTRL):
-		_set_throttle(throttle_val - 0.3 * dt)
+		_set_throttle(throttle_val - 0.4 * dt)
 
 	var v_total = sqrt(vx_ms * vx_ms + vy_ms * vy_ms)
 
-	if sas_mode == "PROGRADE" and v_total > 40.0:
-		var prograde_ang = rad_to_deg(atan2(vx_ms, vy_ms))
-		current_pitch_deg = lerp(current_pitch_deg, prograde_ang, dt * 3.5)
-	elif sas_mode == "VERTICAL":
-		current_pitch_deg = lerp(current_pitch_deg, 0.0, dt * 3.5)
+	if steer_input != 0.0:
+		ang_vel_deg += steer_input * 65.0 * dt
+		ang_vel_deg = clamp(ang_vel_deg, -90.0, 90.0)
+	else:
+		if sas_mode == "PROGRADE" and v_total > 15.0:
+			var pro_deg = rad_to_deg(atan2(vx_ms, vy_ms))
+			var diff = fposmod(pro_deg - current_pitch_deg + 180.0, 360.0) - 180.0
+			ang_vel_deg = clamp(diff * 4.0, -60.0, 60.0)
+		elif sas_mode == "VERTICAL":
+			var diff = fposmod(-current_pitch_deg + 180.0, 360.0) - 180.0
+			ang_vel_deg = clamp(diff * 4.0, -60.0, 60.0)
+		else:
+			ang_vel_deg = move_toward(ang_vel_deg, 0.0, 45.0 * dt)
+
+	current_pitch_deg += ang_vel_deg * dt
+	current_pitch_deg = fposmod(current_pitch_deg + 180.0, 360.0) - 180.0
 
 	var f_th = 0.0
 	if m_fuel_kg > 0.0 and throttle_val > 0.0:
@@ -442,7 +508,33 @@ func _process_custom_flight(delta: float) -> void:
 	vx_ms += ax * dt
 	vy_ms += ay * dt
 	x_pos_m += vx_ms * dt
-	y_pos_m = max(0.0, y_pos_m + vy_ms * dt)
+	y_pos_m += vy_ms * dt
+	max_alt_reached_m = max(max_alt_reached_m, y_pos_m)
+
+	if y_pos_m <= 0.0:
+		y_pos_m = 0.0
+		if max_alt_reached_m > 4.0:
+			var impact_spd = sqrt(vx_ms * vx_ms + vy_ms * vy_ms)
+			if impact_spd > 12.0 or abs(current_pitch_deg) > 22.0:
+				is_crashed = true
+				is_launching = false
+				vx_ms = 0.0
+				vy_ms = 0.0
+				rocket_visual.thrust_power = 0.0
+				lbl_status.text = "КАТАСТРОФА: Апарат розбився об поверхню! Швидкість удару: %.1f м/с (%.0f км/год)" % [impact_spd, impact_spd * 3.6]
+				lbl_status.modulate = ThemeManager.accent_red
+				SoundManager.play_beep(180.0, 0.6)
+				btn_reset.text = "ПОВТОРИТИ"
+				btn_reset.modulate = ThemeManager.accent_amber
+				return
+			else:
+				vx_ms = 0.0
+				vy_ms = 0.0
+				lbl_status.text = "М'ЯКА ПОСАДКА: Апарат успішно сів на поверхню Землі!"
+				lbl_status.modulate = ThemeManager.accent_emerald
+		else:
+			vx_ms = 0.0
+			vy_ms = max(0.0, vy_ms)
 
 	altitude_km = y_pos_m / 1000.0
 	speed_kms = sqrt(vx_ms * vx_ms + vy_ms * vy_ms) / 1000.0
@@ -459,14 +551,22 @@ func _process_custom_flight(delta: float) -> void:
 	if map_view_node:
 		map_view_node.update_telemetry(altitude_km, speed_kms, current_pitch_deg, orb, time_warp)
 
-	rocket_visual.is_flying = true
+	var vp_rect = flight_area.get_viewport_rect()
+	var climb_target_y = vp_rect.size.y * 0.45
+	if y_pos_m < 100.0:
+		var climb_t = y_pos_m / 100.0
+		rocket_visual.position.y = lerp(initial_rocket_pos.y, climb_target_y, climb_t)
+		custom_ground_offset = 0.0
+	else:
+		rocket_visual.position.y = climb_target_y
+		custom_ground_offset = (y_pos_m - 100.0) * 1.5
+
+	var max_drift_px = vp_rect.size.x * 0.28
+	rocket_visual.position.x = initial_rocket_pos.x + clamp(x_pos_m * 0.02, -max_drift_px, max_drift_px)
 	rocket_visual.rotation_degrees = current_pitch_deg
 	rocket_visual.thrust_power = throttle_val
 	rocket_visual.altitude_km = altitude_km
-
-	var climb_px = smoothstep(0.0, 1.0, clamp(altitude_km / 35.0, 0.0, 1.0)) * 260.0
-	var downrange_px = clamp(downrange_km * 2.5, 0.0, 280.0)
-	rocket_visual.position = initial_rocket_pos + Vector2(downrange_px, -climb_px)
+	rocket_visual.is_flying = (y_pos_m > 0.5 or throttle_val > 0.0)
 
 	var dv_rem = isp_s * 9.80665 * log(m_curr_kg / max(1.0, m_dry_kg))
 	var fuel_pct = (m_fuel_kg / max(1.0, float(custom_stats.get("mass_fuel_t", 20.0)) * 1000.0)) * 100.0

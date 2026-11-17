@@ -88,6 +88,9 @@ func _draw() -> void:
 	if alt < 35.0:
 		var ground_alpha = clamp(1.0 - (alt / 20.0), 0.0, 1.0)
 		var ground_y = rect.size.y - 75.0 + (alt * 10.0)
+		if parent_view and "custom_ground_offset" in parent_view and "is_custom" in parent_view and parent_view.is_custom:
+			ground_y = rect.size.y - 75.0 + parent_view.custom_ground_offset
+			ground_alpha = clamp(1.0 - (parent_view.custom_ground_offset / 320.0), 0.0, 1.0)
 
 		for gi in range(4):
 			var gc = Color(0.10 + gi * 0.02, 0.12 + gi * 0.02, 0.16 + gi * 0.01, ground_alpha)

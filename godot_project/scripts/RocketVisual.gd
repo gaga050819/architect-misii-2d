@@ -717,8 +717,22 @@ func draw_separating_fairings(cfg: Dictionary, base_y: float) -> void:
 	])
 	draw_polygon(right_poly, [Color(0.96, 0.97, 0.98)])
 	draw_polyline(right_poly, Color(0.18, 0.20, 0.24), 1.4)
+func get_custom_rocket_height() -> float:
+	var scale_cell = 14.0
+	var max_y = 0.0
+	for item in GameState.custom_rocket_placed_parts:
+		var p_id = str(item.get("part_id", ""))
+		var part = DataManager.get_custom_part(p_id)
+		if part.is_empty():
+			continue
+		var gy = float(item.get("gy", 0.0))
+		var gh = float(part.get("h_grid", 2.0))
+		max_y = max(max_y, (gy + gh) * scale_cell)
+	return max(40.0, max_y)
+
 func draw_custom_rocket() -> void:
 	var scale_cell = 14.0
+	var pivot_y = get_custom_rocket_height() * 0.5
 	for item in GameState.custom_rocket_placed_parts:
 		var p_id = str(item.get("part_id", ""))
 		var part = DataManager.get_custom_part(p_id)
@@ -731,7 +745,7 @@ func draw_custom_rocket() -> void:
 		var gh = float(part.get("h_grid", 2.0))
 
 		var px = gx * scale_cell - (gw * scale_cell * 0.5)
-		var py = -(gy + gh) * scale_cell
+		var py = -(gy + gh) * scale_cell + pivot_y
 		var pw = gw * scale_cell
 		var ph = gh * scale_cell
 		var rect = Rect2(px, py, pw, ph)
