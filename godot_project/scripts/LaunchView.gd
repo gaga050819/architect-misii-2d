@@ -156,8 +156,11 @@ func _init_custom_rocket_mode() -> void:
 	t_vbox.add_child(lbl_throttle_val)
 
 	var bottom_bar = HBoxContainer.new()
-	bottom_bar.position = Vector2(300, 645)
-	bottom_bar.size = Vector2(680, 52)
+	bottom_bar.set_anchors_preset(PRESET_BOTTOM_WIDE)
+	bottom_bar.offset_top = -62.0
+	bottom_bar.offset_bottom = -10.0
+	bottom_bar.offset_left = 180.0
+	bottom_bar.offset_right = -180.0
 	bottom_bar.add_theme_constant_override("separation", 10)
 	bottom_bar.alignment = BoxContainer.ALIGNMENT_CENTER
 	custom_controls_box.add_child(bottom_bar)
@@ -586,7 +589,7 @@ func _on_start_pressed() -> void:
 		GameState.flight_events_log.append("Старт зі зміщенням %d діб: витрачено додаткове паливо." % [off])
 	is_launching = true
 	launch_timer = 0.0
-	btn_start.disabled = true
+	btn_start.visible = false
 
 func _on_next_pressed() -> void:
 	SoundManager.play_click()

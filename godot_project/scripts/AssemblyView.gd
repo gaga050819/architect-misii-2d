@@ -579,8 +579,16 @@ func create_custom_builder_banner() -> PanelContainer:
 	sb.content_margin_right = 12
 	sb.content_margin_bottom = 10
 	panel.add_theme_stylebox_override("panel", sb)
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.gui_input.connect(func(ev: InputEvent):
+		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+			SoundManager.play_click()
+			GameState.is_custom_rocket = true
+			GameState.set_phase("custom_builder")
+	)
 
 	var hbox = HBoxContainer.new()
+	hbox.mouse_filter = Control.MOUSE_FILTER_PASS
 	hbox.add_theme_constant_override("separation", 12)
 	panel.add_child(hbox)
 

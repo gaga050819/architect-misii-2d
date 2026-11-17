@@ -104,7 +104,8 @@ func _draw() -> void:
 	draw_circle(craft_pos, 3.5, Color(1.0, 1.0, 1.0, 1.0))
 	draw_string(font, craft_pos + Vector2(12, -8), "Апарат: %.1f км | %.2f км/с" % [craft_altitude_km, craft_speed_kms], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1.0, 0.95, 0.4, 0.95))
 
-	var panel_rect = Rect2(20, 20, 360, 110)
+	var panel_x = rect.size.x - 380.0
+	var panel_rect = Rect2(panel_x, 20, 360, 110)
 	draw_rect(panel_rect, Color(0.06, 0.1, 0.16, 0.88), true)
 	draw_rect(panel_rect, Color(0.2, 0.5, 0.8, 0.5), false, 1.5)
 
@@ -121,7 +122,7 @@ func _draw() -> void:
 		stat_desc = "Суборбітальний підйом"
 		stat_col = Color(0.8, 0.8, 0.9)
 
-	draw_string(font, Vector2(35, 45), stat_title, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.6, 0.7, 0.85))
-	draw_string(font, Vector2(35, 70), stat_desc, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, stat_col)
-	draw_string(font, Vector2(35, 95), "Прискорення часу: %.0fx" % [time_warp], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.85, 0.95))
-	draw_string(font, Vector2(35, 115), "Натисніть [M] або кнопку вгорі для повернення до камери", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.5, 0.6, 0.7))
+	draw_string(font, Vector2(panel_x + 15, 45), stat_title, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.6, 0.7, 0.85))
+	draw_string(font, Vector2(panel_x + 15, 70), stat_desc, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, stat_col)
+	draw_string(font, Vector2(panel_x + 15, 95), "Прискорення часу: %.0fx" % [time_warp], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.85, 0.95))
+	draw_string(font, Vector2(panel_x + 15, 115), "Натисніть [M] або кнопку для повернення до камери", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.5, 0.6, 0.7))
