@@ -104,7 +104,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="GridVisual" type="Node2D" parent="Content/CenterPanel"]
+[node name="GridVisual" type="Control" parent="Content/CenterPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
 script = ExtResource("2_grid")
 
 [node name="Toolbar" type="HBoxContainer" parent="Content/CenterPanel"]
