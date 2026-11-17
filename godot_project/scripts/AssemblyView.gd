@@ -115,8 +115,10 @@ func populate_items() -> void:
 	var list: Array = []
 	match current_category:
 		0:
+			var custom_banner = create_custom_builder_banner()
+			items_scroll.add_child(custom_banner)
 			list = DataManager.rockets
-			lbl_slot_info.text = "Виберіть ракету-носій місії:"
+			lbl_slot_info.text = "Виберіть готову ракету або створіть власну з блоків:"
 			icon_hint_lock.visible = false
 			lbl_lock_hint.visible = false
 		1:
@@ -451,6 +453,7 @@ func select_item(item_id: String, category: int) -> void:
 	match category:
 		0:
 			GameState.rocket_id = item_id
+			GameState.is_custom_rocket = false
 		1:
 			GameState.platform_id = item_id
 			filter_incompatible_instruments()
@@ -564,3 +567,49 @@ func _on_viewport_resized() -> void:
 		left_panel.custom_minimum_size.x = max(380.0, vp_w * 0.48)
 	else:
 		left_panel.custom_minimum_size.x = 520.0
+func create_custom_builder_banner() -> PanelContainer:
+	var panel = PanelContainer.new()
+	var sb = StyleBoxFlat.new()
+	sb.set_corner_radius_all(10)
+	sb.set_border_width_all(2)
+	sb.border_color = ThemeManager.accent_cyan
+	sb.bg_color = Color(0.0, 0.45, 0.65, 0.22) if ThemeManager.theme_value <= 0.5 else Color(0.75, 0.90, 1.0, 0.85)
+	sb.content_margin_left = 12
+	sb.content_margin_top = 10
+	sb.content_margin_right = 12
+	sb.content_margin_bottom = 10
+	panel.add_theme_stylebox_override("panel", sb)
+
+	var hbox = HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 12)
+	panel.add_child(hbox)
+
+	var vbox = VBoxContainer.new()
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox.add_child(vbox)
+
+	var lbl_title = Label.new()
+	lbl_title.text = "🛠️ БЛОКОВИЙ КОНСТРУКТОР (SFS РЕЖИМ)"
+	lbl_title.add_theme_font_size_override("font_size", 13)
+	lbl_title.add_theme_color_override("font_color", ThemeManager.accent_cyan)
+	vbox.add_child(lbl_title)
+
+	var lbl_desc = Label.new()
+	lbl_desc.text = "Зберіть ракету з модульних блоків: баки, двигуни, декуплери, теплові щити."
+	lbl_desc.add_theme_font_size_override("font_size", 11)
+	lbl_desc.add_theme_color_override("font_color", ThemeManager.get_text_color())
+	lbl_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	vbox.add_child(lbl_desc)
+
+	var btn = Button.new()
+	btn.text = "Конструювати ->"
+	btn.custom_minimum_size = Vector2(130, 36)
+	btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	btn.pressed.connect(func():
+		SoundManager.play_click()
+		GameState.is_custom_rocket = true
+		GameState.set_phase("custom_builder")
+	)
+	hbox.add_child(btn)
+
+	return panel

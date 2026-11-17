@@ -129,6 +129,20 @@ func init_planetary_physics() -> void:
 			edl_phase = 2
 			btn_chute.visible = false
 
+	if GameState.is_custom_rocket:
+		var c_stats = Calc.calculate_custom_rocket(GameState.custom_rocket_placed_parts)
+		var has_hs = bool(c_stats.get("has_heat_shield", false))
+		var has_ch = bool(c_stats.get("has_parachute", false))
+		if (GameState.target_id == "mars" or GameState.target_id == "venus") and not has_hs:
+			craft_visual.trigger_explosion()
+			is_active = false
+			lbl_status.text = "КАТАСТРОФА: Відсутній тепловий щит! Апарат зруйновано при вході в атмосферу."
+			lbl_status.modulate = ThemeManager.get_accent_red()
+			btn_box.visible = true
+			btn_next.disabled = true
+			return
+		btn_chute.visible = has_ch
+
 	craft_visual.edl_phase = edl_phase
 
 func _on_select_manual_pressed() -> void:

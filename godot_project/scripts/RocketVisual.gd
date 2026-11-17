@@ -158,6 +158,9 @@ func get_rocket_config() -> Dictionary:
 	return cfg
 
 func _draw() -> void:
+	if GameState.is_custom_rocket and not GameState.custom_rocket_placed_parts.is_empty():
+		draw_custom_rocket()
+		return
 	var cfg = get_rocket_config()
 	var w = cfg["w"]
 	var h_s1 = cfg["h_s1"]
@@ -714,3 +717,118 @@ func draw_separating_fairings(cfg: Dictionary, base_y: float) -> void:
 	])
 	draw_polygon(right_poly, [Color(0.96, 0.97, 0.98)])
 	draw_polyline(right_poly, Color(0.18, 0.20, 0.24), 1.4)
+func draw_custom_rocket() -> void:
+	var scale_cell = 14.0
+	for item in GameState.custom_rocket_placed_parts:
+		var p_id = str(item.get("part_id", ""))
+		var part = DataManager.get_custom_part(p_id)
+		if part.is_empty():
+			continue
+
+		var gx = float(item.get("gx", 0.0))
+		var gy = float(item.get("gy", 0.0))
+		var gw = float(part.get("w_grid", 2.0))
+		var gh = float(part.get("h_grid", 2.0))
+
+		var px = gx * scale_cell - (gw * scale_cell * 0.5)
+		var py = -(gy + gh) * scale_cell
+		var pw = gw * scale_cell
+		var ph = gh * scale_cell
+		var rect = Rect2(px, py, pw, ph)
+
+		var cat = str(part.get("category", ""))
+		var col = Color.from_string(part.get("color", "#94a3b8"), Color.GRAY)
+
+		if cat == "engines" and is_flying and thrust_power > 0.0:
+			var flame_len = 35.0 * thrust_power + sin(flame_time * 45.0 + gx) * 6.0
+			var flame_pts = PackedVector2Array([
+				Vector2(px + pw * 0.2, py + ph),
+				Vector2(px + pw * 0.8, py + ph),
+				Vector2(px + pw * 0.9, py + ph + flame_len * 0.7),
+				Vector2(px + pw * 0.5, py + ph + flame_len * 1.2),
+				Vector2(px + pw * 0.1, py + ph + flame_len * 0.7)
+			])
+			draw_polygon(flame_pts, [Color(1.0, 0.55, 0.15, 0.85)])
+			var core_pts = PackedVector2Array([
+				Vector2(px + pw * 0.35, py + ph),
+				Vector2(px + pw * 0.65, py + ph),
+				Vector2(px + pw * 0.5, py + ph + flame_len * 0.6)
+			])
+			draw_polygon(core_pts, [Color(1.0, 0.95, 0.6, 0.95)])
+
+		match cat:
+			"payload":
+				draw_rect(rect, col)
+				draw_rect(rect, Color(0.12, 0.16, 0.22), false, 1.5)
+			"heat_shield":
+				var pts = PackedVector2Array([
+					Vector2(px, py),
+					Vector2(px + pw, py),
+					Vector2(px + pw * 0.85, py + ph),
+					Vector2(px + pw * 0.15, py + ph)
+				])
+				draw_colored_polygon(pts, col)
+				draw_polyline(pts, Color(0.1, 0.08, 0.05), 1.5)
+			"tanks":
+				if p_id == "tank_cone_25_15":
+					var pts = PackedVector2Array([
+						Vector2(px + pw * 0.2, py),
+						Vector2(px + pw * 0.8, py),
+						Vector2(px + pw, py + ph),
+						Vector2(px, py + ph)
+					])
+					draw_colored_polygon(pts, col)
+					draw_polyline(pts, Color(0.2, 0.25, 0.3), 1.5)
+				elif p_id == "tank_side_booster":
+					var pts = PackedVector2Array([
+						Vector2(px + pw * 0.5, py),
+						Vector2(px + pw, py + scale_cell * 1.2),
+						Vector2(px + pw, py + ph),
+						Vector2(px, py + ph),
+						Vector2(px, py + scale_cell * 1.2)
+					])
+					draw_colored_polygon(pts, col)
+					draw_polyline(pts, Color(0.2, 0.25, 0.3), 1.5)
+				else:
+					draw_rect(rect, col)
+					draw_rect(rect, Color(0.2, 0.25, 0.3), false, 1.5)
+			"engines":
+				var chamber = Rect2(px + pw * 0.3, py, pw * 0.4, ph * 0.35)
+				draw_rect(chamber, col)
+				var nozzle_top = py + ph * 0.35
+				var nozzle_bot = py + ph
+				var n_pts = PackedVector2Array([
+					Vector2(px + pw * 0.35, nozzle_top),
+					Vector2(px + pw * 0.65, nozzle_top),
+					Vector2(px + pw * 0.9, nozzle_bot),
+					Vector2(px + pw * 0.1, nozzle_bot)
+				])
+				draw_colored_polygon(n_pts, Color(0.2, 0.24, 0.3))
+				draw_polyline(n_pts, Color(0.1, 0.14, 0.2), 1.5)
+			"decouplers":
+				draw_rect(rect, col)
+				draw_rect(rect, Color(0.1, 0.1, 0.1), false, 1.5)
+			"aero_landing":
+				if p_id == "fairing_cone":
+					var f_pts = PackedVector2Array([
+						Vector2(px + pw * 0.5, py),
+						Vector2(px + pw, py + ph),
+						Vector2(px, py + ph)
+					])
+					draw_colored_polygon(f_pts, col)
+					draw_polyline(f_pts, Color(0.2, 0.25, 0.3), 1.5)
+				elif p_id == "stabilizer_fin":
+					var fin_pts = PackedVector2Array([
+						Vector2(px, py),
+						Vector2(px + pw, py + ph * 0.7),
+						Vector2(px + pw, py + ph),
+						Vector2(px, py + ph)
+					])
+					draw_colored_polygon(fin_pts, col)
+					draw_polyline(fin_pts, Color(0.1, 0.15, 0.25), 1.5)
+				else:
+					draw_rect(rect, col)
+					draw_rect(rect, Color(0.2, 0.25, 0.3), false, 1.5)
+			_:
+				draw_rect(rect, col)
+				draw_rect(rect, Color(0.2, 0.25, 0.3), false, 1.5)

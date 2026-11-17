@@ -12,6 +12,8 @@ var mission_goals: Array = []
 var events_data: Dictionary = {}
 var media_data: Dictionary = {}
 var images_cache: Dictionary = {}
+var custom_parts: Array = []
+var custom_categories: Array = []
 
 func _ready() -> void:
 	load_all_data()
@@ -37,6 +39,11 @@ func load_all_data() -> void:
 		mission_goals = miss_dict["goals"]
 	events_data = load_json_dict("res://data/events.json")
 	media_data = load_json_dict("res://data/media.json")
+	var cp_dict = load_json_dict("res://data/custom_parts.json")
+	if cp_dict.has("categories"):
+		custom_categories = cp_dict["categories"]
+	if cp_dict.has("parts"):
+		custom_parts = cp_dict["parts"]
 
 func load_json_array(path: String) -> Array:
 	if not FileAccess.file_exists(path):
@@ -115,3 +122,12 @@ func get_image_texture(img_name: String) -> Texture2D:
 				images_cache[img_name] = tex
 				return tex
 	return null
+func get_custom_part(id: String) -> Dictionary:
+	return get_item_by_id(custom_parts, id)
+
+func get_custom_parts_by_category(cat_id: String) -> Array:
+	var res: Array = []
+	for p in custom_parts:
+		if p.get("category", "") == cat_id:
+			res.append(p)
+	return res

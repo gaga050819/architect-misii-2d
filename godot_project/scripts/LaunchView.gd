@@ -27,7 +27,41 @@ var downrange_km: float = 0.0
 var stars: Array = []
 var current_local_center_y: float = -75.0
 
+var is_custom: bool = false
+var custom_stats: Dictionary = {}
+var m_dry_kg: float = 5000.0
+var m_fuel_kg: float = 45000.0
+var m_curr_kg: float = 50000.0
+var thrust_n: float = 600000.0
+var isp_s: float = 300.0
+var aero_cd: float = 0.25
+var current_pitch_deg: float = 0.0
+var throttle_val: float = 1.0
+var sas_mode: String = "MANUAL"
+var vx_ms: float = 0.0
+var vy_ms: float = 0.0
+var x_pos_m: float = 0.0
+var y_pos_m: float = 0.0
+var time_warp: float = 1.0
+var staging_step: int = 0
+var hull_temp_k: float = 293.0
+var ablation_kg: float = 300.0
+var map_view_node: Control = null
+var is_map_active: bool = false
+
+var custom_controls_box: Control = null
+var slider_throttle: VSlider = null
+var lbl_throttle_val: Label = null
+var btn_stage: Button = null
+var btn_map_toggle: Button = null
+var btn_sas: Button = null
+var btn_steer_left: Button = null
+var btn_steer_right: Button = null
+var btn_time_warp: Button = null
+var btn_reset: Button = null
+
 func _ready() -> void:
+	is_custom = GameState.is_custom_rocket
 	update_pad_alignment()
 	current_local_center_y = -75.0
 	_init_window_panel()
@@ -44,6 +78,204 @@ func _ready() -> void:
 
 	for i in range(70):
 		stars.append(Vector2(randf_range(20.0, 1260.0), randf_range(10.0, 400.0)))
+
+	_setup_orbital_map()
+
+	if is_custom:
+		_init_custom_rocket_mode()
+
+func _setup_orbital_map() -> void:
+	var map_script = load("res://scripts/OrbitalMapVisual.gd")
+	if map_script:
+		map_view_node = Control.new()
+		map_view_node.set_script(map_script)
+		map_view_node.set_anchors_preset(PRESET_FULL_RECT)
+		map_view_node.visible = false
+		flight_area.add_child(map_view_node)
+
+func _init_custom_rocket_mode() -> void:
+	custom_stats = Calc.calculate_custom_rocket(GameState.custom_rocket_placed_parts)
+	m_dry_kg = max(500.0, float(custom_stats.get("mass_dry_t", 5.0)) * 1000.0)
+	m_fuel_kg = max(100.0, float(custom_stats.get("mass_fuel_t", 20.0)) * 1000.0)
+	m_curr_kg = m_dry_kg + m_fuel_kg
+	thrust_n = max(50000.0, float(custom_stats.get("thrust_kn", 400.0)) * 1000.0)
+	isp_s = max(200.0, float(custom_stats.get("avg_isp", 280.0)))
+	aero_cd = max(0.08, float(custom_stats.get("cd", 0.2)))
+	ablation_kg = float(custom_stats.get("ablation_t", 0.2)) * 1000.0
+
+	custom_controls_box = Control.new()
+	custom_controls_box.name = "CustomSfsControls"
+	custom_controls_box.set_anchors_preset(PRESET_FULL_RECT)
+	custom_controls_box.mouse_filter = MOUSE_FILTER_IGNORE
+	add_child(custom_controls_box)
+
+	var throttle_panel = PanelContainer.new()
+	throttle_panel.position = Vector2(25, 235)
+	throttle_panel.size = Vector2(85, 290)
+	throttle_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(12, 1))
+	custom_controls_box.add_child(throttle_panel)
+
+	var t_vbox = VBoxContainer.new()
+	t_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	t_vbox.add_theme_constant_override("separation", 6)
+	throttle_panel.add_child(t_vbox)
+
+	var lbl_th_title = Label.new()
+	lbl_th_title.text = "ТЯГА"
+	lbl_th_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_th_title.add_theme_font_size_override("font_size", 12)
+	lbl_th_title.add_theme_color_override("font_color", ThemeManager.accent_cyan)
+	t_vbox.add_child(lbl_th_title)
+
+	var btn_th_max = Button.new()
+	btn_th_max.text = "100%"
+	btn_th_max.custom_minimum_size = Vector2(65, 26)
+	btn_th_max.pressed.connect(func(): _set_throttle(1.0))
+	t_vbox.add_child(btn_th_max)
+
+	slider_throttle = VSlider.new()
+	slider_throttle.custom_minimum_size = Vector2(28, 140)
+	slider_throttle.size_flags_horizontal = SIZE_SHRINK_CENTER
+	slider_throttle.min_value = 0.0
+	slider_throttle.max_value = 1.0
+	slider_throttle.step = 0.01
+	slider_throttle.value = 1.0
+	slider_throttle.value_changed.connect(func(val): throttle_val = val; _update_throttle_label())
+	t_vbox.add_child(slider_throttle)
+
+	var btn_th_zero = Button.new()
+	btn_th_zero.text = "0%"
+	btn_th_zero.custom_minimum_size = Vector2(65, 26)
+	btn_th_zero.pressed.connect(func(): _set_throttle(0.0))
+	t_vbox.add_child(btn_th_zero)
+
+	lbl_throttle_val = Label.new()
+	lbl_throttle_val.text = "100%"
+	lbl_throttle_val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_throttle_val.add_theme_font_size_override("font_size", 12)
+	t_vbox.add_child(lbl_throttle_val)
+
+	var bottom_bar = HBoxContainer.new()
+	bottom_bar.position = Vector2(300, 645)
+	bottom_bar.size = Vector2(680, 52)
+	bottom_bar.add_theme_constant_override("separation", 10)
+	bottom_bar.alignment = BoxContainer.ALIGNMENT_CENTER
+	custom_controls_box.add_child(bottom_bar)
+
+	btn_steer_left = Button.new()
+	btn_steer_left.text = "◀ [A]"
+	btn_steer_left.custom_minimum_size = Vector2(80, 48)
+	btn_steer_left.pressed.connect(func(): current_pitch_deg = max(-45.0, current_pitch_deg - 3.0))
+	bottom_bar.add_child(btn_steer_left)
+
+	btn_steer_right = Button.new()
+	btn_steer_right.text = "[D] ▶"
+	btn_steer_right.custom_minimum_size = Vector2(80, 48)
+	btn_steer_right.pressed.connect(func(): current_pitch_deg = min(90.0, current_pitch_deg + 3.0))
+	bottom_bar.add_child(btn_steer_right)
+
+	btn_sas = Button.new()
+	btn_sas.text = "SAS: РУЧНЕ"
+	btn_sas.custom_minimum_size = Vector2(130, 48)
+	btn_sas.pressed.connect(_cycle_sas_mode)
+	bottom_bar.add_child(btn_sas)
+
+	btn_stage = Button.new()
+	btn_stage.text = "🚀 СТУПІНЬ (Space)"
+	btn_stage.custom_minimum_size = Vector2(160, 48)
+	btn_stage.pressed.connect(_on_custom_stage_triggered)
+	var stage_style = StyleBoxFlat.new()
+	stage_style.bg_color = Color(0.9, 0.45, 0.1, 0.8)
+	stage_style.set_corner_radius_all(8)
+	btn_stage.add_theme_stylebox_override("normal", stage_style)
+	bottom_bar.add_child(btn_stage)
+
+	btn_map_toggle = Button.new()
+	btn_map_toggle.text = "🗺️ КАРТА (M)"
+	btn_map_toggle.custom_minimum_size = Vector2(130, 48)
+	btn_map_toggle.pressed.connect(_toggle_map_view)
+	bottom_bar.add_child(btn_map_toggle)
+
+	btn_time_warp = Button.new()
+	btn_time_warp.text = "1x"
+	btn_time_warp.custom_minimum_size = Vector2(60, 48)
+	btn_time_warp.pressed.connect(_cycle_time_warp)
+	bottom_bar.add_child(btn_time_warp)
+
+	btn_reset = Button.new()
+	btn_reset.text = "🔄 В ЦЕХ"
+	btn_reset.custom_minimum_size = Vector2(80, 48)
+	btn_reset.pressed.connect(func(): GameState.set_phase("custom_builder"))
+	bottom_bar.add_child(btn_reset)
+
+func _set_throttle(val: float) -> void:
+	throttle_val = clamp(val, 0.0, 1.0)
+	if slider_throttle:
+		slider_throttle.value = throttle_val
+	_update_throttle_label()
+
+func _update_throttle_label() -> void:
+	if lbl_throttle_val:
+		lbl_throttle_val.text = "%d%%" % int(throttle_val * 100.0)
+
+func _cycle_sas_mode() -> void:
+	SoundManager.play_click()
+	match sas_mode:
+		"MANUAL":
+			sas_mode = "PROGRADE"
+			btn_sas.text = "SAS: ПРОГРАД"
+			btn_sas.modulate = ThemeManager.accent_emerald
+		"PROGRADE":
+			sas_mode = "VERTICAL"
+			btn_sas.text = "SAS: ВЕРТИК"
+			btn_sas.modulate = ThemeManager.accent_cyan
+		"VERTICAL":
+			sas_mode = "MANUAL"
+			btn_sas.text = "SAS: РУЧНЕ"
+			btn_sas.modulate = Color.WHITE
+
+func _cycle_time_warp() -> void:
+	SoundManager.play_click()
+	if time_warp == 1.0:
+		time_warp = 2.0
+	elif time_warp == 2.0:
+		time_warp = 5.0
+	elif time_warp == 5.0:
+		time_warp = 10.0
+	else:
+		time_warp = 1.0
+	btn_time_warp.text = "%.0fx" % time_warp
+
+func _toggle_map_view() -> void:
+	SoundManager.play_click()
+	is_map_active = not is_map_active
+	if map_view_node:
+		map_view_node.visible = is_map_active
+	if btn_map_toggle:
+		btn_map_toggle.text = "📹 КАМЕРА (M)" if is_map_active else "🗺️ КАРТА (M)"
+
+func _on_custom_stage_triggered() -> void:
+	SoundManager.play_click()
+	staging_step += 1
+	rocket_visual.staging_stage = staging_step
+	var drop_dry = m_dry_kg * 0.22
+	m_dry_kg = max(400.0, m_dry_kg - drop_dry)
+	thrust_n = max(30000.0, thrust_n * 0.85)
+	lbl_status.text = "СТУПІНЬ %d ВІДОКРЕМЛЕНО! Системи номінальні." % staging_step
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not is_custom or not is_launching:
+		return
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		match event.keycode:
+			KEY_SPACE:
+				_on_custom_stage_triggered()
+			KEY_M:
+				_toggle_map_view()
+			KEY_Z:
+				_set_throttle(1.0)
+			KEY_X:
+				_set_throttle(0.0)
 
 func _init_window_panel() -> void:
 	window_panel.add_theme_stylebox_override("panel", ThemeManager.create_glass_style(16, 1))
@@ -139,6 +371,119 @@ func _process(delta: float) -> void:
 	if not is_launching:
 		update_pad_alignment()
 		return
+
+	if is_custom:
+		_process_custom_flight(delta)
+	else:
+		_process_classic_flight(delta)
+
+func _process_custom_flight(delta: float) -> void:
+	launch_timer += delta
+	if launch_timer < 2.5:
+		var count = 3 - int(launch_timer)
+		lbl_status.text = "Зворотний відлік T-%d... Запалювання!" % [count]
+		shake_intensity = (launch_timer / 2.5) * 3.5
+		rocket_visual.position = initial_rocket_pos + Vector2(randf_range(-shake_intensity, shake_intensity), randf_range(-shake_intensity, shake_intensity))
+		return
+
+	var dt = delta * time_warp
+
+	if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT):
+		current_pitch_deg = max(-45.0, current_pitch_deg - 25.0 * dt)
+	elif Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT):
+		current_pitch_deg = min(90.0, current_pitch_deg + 25.0 * dt)
+	elif Input.is_key_pressed(KEY_SHIFT):
+		_set_throttle(throttle_val + 0.3 * dt)
+	elif Input.is_key_pressed(KEY_CTRL):
+		_set_throttle(throttle_val - 0.3 * dt)
+
+	var v_total = sqrt(vx_ms * vx_ms + vy_ms * vy_ms)
+
+	if sas_mode == "PROGRADE" and v_total > 40.0:
+		var prograde_ang = rad_to_deg(atan2(vx_ms, vy_ms))
+		current_pitch_deg = lerp(current_pitch_deg, prograde_ang, dt * 3.5)
+	elif sas_mode == "VERTICAL":
+		current_pitch_deg = lerp(current_pitch_deg, 0.0, dt * 3.5)
+
+	var f_th = 0.0
+	if m_fuel_kg > 0.0 and throttle_val > 0.0:
+		f_th = thrust_n * throttle_val
+		var m_dot = f_th / (isp_s * 9.80665)
+		m_fuel_kg = max(0.0, m_fuel_kg - m_dot * dt)
+	else:
+		f_th = 0.0
+		throttle_val = 0.0
+		_update_throttle_label()
+
+	m_curr_kg = m_dry_kg + m_fuel_kg
+	var r_m = 6371000.0 + y_pos_m
+	var g = 3.986004418e14 / (r_m * r_m)
+	var rho = Calc.atmospheric_density(1.225, y_pos_m, 8500.0)
+	var area = 3.14159 * 1.5 * 1.5
+	var f_drag = 0.5 * aero_cd * area * rho * v_total * v_total
+	var q_press_kpa = (0.5 * rho * v_total * v_total) / 1000.0
+
+	var pitch_rad = deg_to_rad(current_pitch_deg)
+	var ax_th = (f_th * sin(pitch_rad)) / m_curr_kg
+	var ay_th = (f_th * cos(pitch_rad)) / m_curr_kg
+
+	var drag_dir_x = -(vx_ms / max(1.0, v_total))
+	var drag_dir_y = -(vy_ms / max(1.0, v_total))
+	var ax_drag = (f_drag * drag_dir_x) / m_curr_kg
+	var ay_drag = (f_drag * drag_dir_y) / m_curr_kg
+
+	var a_cent = (vx_ms * vx_ms) / r_m
+	var ax = ax_th + ax_drag
+	var ay = ay_th + ay_drag - g + a_cent
+
+	vx_ms += ax * dt
+	vy_ms += ay * dt
+	x_pos_m += vx_ms * dt
+	y_pos_m = max(0.0, y_pos_m + vy_ms * dt)
+
+	altitude_km = y_pos_m / 1000.0
+	speed_kms = sqrt(vx_ms * vx_ms + vy_ms * vy_ms) / 1000.0
+	downrange_km = x_pos_m / 1000.0
+
+	var heat_flux = Calc.calculate_aero_heating(rho, v_total, 1.5)
+	if heat_flux > 3000.0:
+		if bool(custom_stats.get("has_heat_shield", false)):
+			ablation_kg = max(0.0, ablation_kg - heat_flux * 1e-8 * dt)
+		else:
+			hull_temp_k += heat_flux * 0.00008 * dt
+
+	var orb = Calc.calculate_keplerian_orbit(3.986004418e14, r_m, vx_ms, vy_ms, 6371000.0)
+	if map_view_node:
+		map_view_node.update_telemetry(altitude_km, speed_kms, current_pitch_deg, orb, time_warp)
+
+	rocket_visual.is_flying = true
+	rocket_visual.rotation_degrees = current_pitch_deg
+	rocket_visual.thrust_power = throttle_val
+	rocket_visual.altitude_km = altitude_km
+
+	var climb_px = smoothstep(0.0, 1.0, clamp(altitude_km / 35.0, 0.0, 1.0)) * 260.0
+	var downrange_px = clamp(downrange_km * 2.5, 0.0, 280.0)
+	rocket_visual.position = initial_rocket_pos + Vector2(downrange_px, -climb_px)
+
+	var dv_rem = isp_s * 9.80665 * log(m_curr_kg / max(1.0, m_dry_kg))
+	var fuel_pct = (m_fuel_kg / max(1.0, float(custom_stats.get("mass_fuel_t", 20.0)) * 1000.0)) * 100.0
+	var g_accel = sqrt(ax * ax + (ay + g) * (ay + g)) / 9.80665
+
+	lbl_altitude.text = "Висота: %.1f км | Ap: %.1f км | Pe: %.1f км" % [altitude_km, orb.apoapsis_km, orb.periapsis_km]
+	lbl_speed.text = "Швидкість: %.2f км/с (%d км/год) | Запас dV: %d м/с" % [speed_kms, int(speed_kms * 3600.0), int(dv_rem)]
+	lbl_gforce.text = "Перевантаження: %.1f G | Паливо: %.1f%%" % [g_accel, fuel_pct]
+	lbl_telemetry_details.text = "Дальність: %.1f км | Тиск Q: %.1f кПа | Т: %.0f K" % [downrange_km, q_press_kpa, hull_temp_k]
+
+	if bool(orb.get("is_stable_orbit", false)):
+		lbl_status.text = "🎉 СТАБІЛЬНА ОРБІТА LEO ЗАКРИТА! Готовність до міжпланетного перельоту."
+		lbl_status.modulate = ThemeManager.accent_emerald
+		btn_next.visible = true
+	elif altitude_km > 100.0:
+		lbl_status.text = "Лінія Кармана пройдена (100 км): Космос. Сформуйте орбіту нахилом до горизонту!"
+	elif q_press_kpa > 25.0:
+		lbl_status.text = "MAX-Q: Максимальний аеродинамічний тиск!"
+
+func _process_classic_flight(delta: float) -> void:
 	launch_timer += delta
 
 	if launch_timer < 3.0:

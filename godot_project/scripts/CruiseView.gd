@@ -70,13 +70,19 @@ func _ready() -> void:
 	target_sun_au = float(target.get("sun_au", 1.524))
 	total_distance_mkm = max(1.0, abs(target_sun_au - 1.0) * 149.6 + 65.0)
 
-	var platform = DataManager.get_platform(GameState.platform_id)
-	var p_type = str(platform.get("type", "orbiter")).to_upper()
-	lbl_craft_type.text = p_type
-	var t_name = DataManager.get_localized(target.get("name"), "Марс")
-	var p_name = DataManager.get_localized(platform.get("name"), "Апарат")
-	craft_name_str = "%s (%s)" % [p_name, t_name]
-	lbl_craft_name.text = craft_name_str
+	if GameState.is_custom_rocket:
+		lbl_craft_type.text = "SFS МОДУЛЬ"
+		var t_name = DataManager.get_localized(target.get("name"), "Марс")
+		craft_name_str = "SFS Ракета (%s)" % [t_name]
+		lbl_craft_name.text = craft_name_str
+	else:
+		var platform = DataManager.get_platform(GameState.platform_id)
+		var p_type = str(platform.get("type", "orbiter")).to_upper()
+		lbl_craft_type.text = p_type
+		var t_name = DataManager.get_localized(target.get("name"), "Марс")
+		var p_name = DataManager.get_localized(platform.get("name"), "Апарат")
+		craft_name_str = "%s (%s)" % [p_name, t_name]
+		lbl_craft_name.text = craft_name_str
 
 	bar_sun_dist.min_value = min(1.0, target_sun_au)
 	bar_sun_dist.max_value = max(1.0, target_sun_au)

@@ -32,6 +32,7 @@ func _ready() -> void:
 func register_views() -> void:
 	views["briefing"] = preload("res://scenes/BriefingView.tscn")
 	views["assembly"] = preload("res://scenes/AssemblyView.tscn")
+	views["custom_builder"] = preload("res://scenes/CustomBuilderView.tscn")
 	views["launch"] = preload("res://scenes/LaunchView.tscn")
 	views["cruise"] = preload("res://scenes/CruiseView.tscn")
 	views["landing"] = preload("res://scenes/LandingView.tscn")
@@ -116,7 +117,7 @@ func update_phase_buttons() -> void:
 
 			btn.add_theme_font_size_override("font_size", font_sz)
 
-			var is_active = (p_name == GameState.current_phase)
+			var is_active = (p_name == GameState.current_phase) or (p_name == "assembly" and GameState.current_phase == "custom_builder")
 			var is_past = (current_idx != -1 and i < current_idx)
 
 			var sb = StyleBoxFlat.new()

@@ -22,6 +22,10 @@ var landing_damage: float = 0.0
 var flight_events_log: Array = []
 var launch_window_offset: int = 0
 var mission_success: bool = true
+var is_custom_rocket: bool = false
+var custom_rocket_placed_parts: Array = []
+var custom_rocket_staging: Array = []
+var custom_rocket_stats: Dictionary = {"mass_total": 0.0, "mass_dry": 0.0, "thrust": 0.0, "twr": 0.0, "delta_v": 0.0}
 
 func _ready() -> void:
 	reset_mission()
@@ -43,6 +47,10 @@ func reset_mission() -> void:
 	landing_damage = 0.0
 	launch_window_offset = 0
 	flight_events_log.clear()
+	is_custom_rocket = false
+	custom_rocket_placed_parts.clear()
+	custom_rocket_staging.clear()
+	custom_rocket_stats = {"mass_total": 0.0, "mass_dry": 0.0, "thrust": 0.0, "twr": 0.0, "delta_v": 0.0}
 	mission_success = true
 	state_changed.emit()
 

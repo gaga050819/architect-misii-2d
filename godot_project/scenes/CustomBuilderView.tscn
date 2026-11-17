@@ -1,0 +1,235 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/CustomBuilderView.gd" id="1_builder"]
+[ext_resource type="Script" path="res://scripts/CustomRocketGridVisual.gd" id="2_grid"]
+
+[node name="CustomBuilderView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_builder")
+
+[node name="TopBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = 48.0
+grow_horizontal = 2
+
+[node name="HBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BtnBack" type="Button" parent="TopBar/HBox"]
+custom_minimum_size = Vector2(160, 32)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "<- Класична збірка"
+
+[node name="LblTitle" type="Label" parent="TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "🚀 БЛОКОВИЙ КОНСТРУКТОР РАКЕТ (SFS РЕЖИМ)"
+vertical_alignment = 1
+
+[node name="BtnSample" type="Button" parent="TopBar/HBox"]
+custom_minimum_size = Vector2(140, 32)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "Готовий зразок"
+
+[node name="BtnSymmetry" type="Button" parent="TopBar/HBox"]
+custom_minimum_size = Vector2(120, 32)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "Симетрія: 1x"
+
+[node name="BtnClear" type="Button" parent="TopBar/HBox"]
+custom_minimum_size = Vector2(100, 32)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "Очистити"
+
+[node name="Content" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 56.0
+offset_right = -12.0
+offset_bottom = -72.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="LeftPanel" type="PanelContainer" parent="Content"]
+custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="Content/LeftPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CategoryButtons" type="HBoxContainer" parent="Content/LeftPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ScrollItems" type="ScrollContainer" parent="Content/LeftPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="VBoxItems" type="VBoxContainer" parent="Content/LeftPanel/VBox/ScrollItems"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="CenterPanel" type="PanelContainer" parent="Content"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GridVisual" type="Node2D" parent="Content/CenterPanel"]
+script = ExtResource("2_grid")
+
+[node name="Toolbar" type="HBoxContainer" parent="Content/CenterPanel"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_constants/separation = 6
+
+[node name="BtnMoveUp" type="Button" parent="Content/CenterPanel/Toolbar"]
+custom_minimum_size = Vector2(36, 32)
+layout_mode = 2
+text = "▲"
+
+[node name="BtnMoveDown" type="Button" parent="Content/CenterPanel/Toolbar"]
+custom_minimum_size = Vector2(36, 32)
+layout_mode = 2
+text = "▼"
+
+[node name="BtnMoveLeft" type="Button" parent="Content/CenterPanel/Toolbar"]
+custom_minimum_size = Vector2(36, 32)
+layout_mode = 2
+text = "◄"
+
+[node name="BtnMoveRight" type="Button" parent="Content/CenterPanel/Toolbar"]
+custom_minimum_size = Vector2(36, 32)
+layout_mode = 2
+text = "►"
+
+[node name="BtnDelete" type="Button" parent="Content/CenterPanel/Toolbar"]
+custom_minimum_size = Vector2(70, 32)
+layout_mode = 2
+text = "Видалити"
+
+[node name="BottomHUD" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -64.0
+offset_right = -12.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBoxMain" type="HBoxContainer" parent="BottomHUD"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="VBoxMass" type="VBoxContainer" parent="BottomHUD/HBoxMain"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="LblMassTitle" type="Label" parent="BottomHUD/HBoxMain/VBoxMass"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
+theme_override_font_sizes/font_size = 11
+text = "Стартова маса:"
+
+[node name="LblMassVal" type="Label" parent="BottomHUD/HBoxMain/VBoxMass"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "0.0 т"
+
+[node name="VBoxTWR" type="VBoxContainer" parent="BottomHUD/HBoxMain"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="LblTWRTitle" type="Label" parent="BottomHUD/HBoxMain/VBoxTWR"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
+theme_override_font_sizes/font_size = 11
+text = "TWR (тяга/вага):"
+
+[node name="LblTWRVal" type="Label" parent="BottomHUD/HBoxMain/VBoxTWR"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "0.00"
+
+[node name="VBoxDV" type="VBoxContainer" parent="BottomHUD/HBoxMain"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="LblDVTitle" type="Label" parent="BottomHUD/HBoxMain/VBoxDV"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
+theme_override_font_sizes/font_size = 11
+text = "Запас швидкості dV:"
+
+[node name="LblDVVal" type="Label" parent="BottomHUD/HBoxMain/VBoxDV"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "0 м/с"
+
+[node name="VBoxHeat" type="VBoxContainer" parent="BottomHUD/HBoxMain"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="LblHeatTitle" type="Label" parent="BottomHUD/HBoxMain/VBoxHeat"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.88, 1)
+theme_override_font_sizes/font_size = 11
+text = "Тепловий щит:"
+
+[node name="LblHeatVal" type="Label" parent="BottomHUD/HBoxMain/VBoxHeat"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Відсутній ⚠️"
+
+[node name="LblStatusHint" type="Label" parent="BottomHUD/HBoxMain"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Встановіть модулі та двигуни для формування ступенів."
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="BtnLaunch" type="Button" parent="BottomHUD/HBoxMain"]
+custom_minimum_size = Vector2(180, 44)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 15
+text = "До запуску 🚀"

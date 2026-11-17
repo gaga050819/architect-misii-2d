@@ -167,6 +167,8 @@ func _build_comparison_text(score: int) -> void:
 		comp_text += "Місія здійснила якісний прорив у дослідженні підлідного океану на рівні флагманського проекту Europa Clipper."
 	else:
 		comp_text += "Зонд успішно виконав високоточне картографування та забір реголіту у стилі місії OSIRIS-REx."
+	if GameState.is_custom_rocket:
+		comp_text += "\n\n🚀 РАКЕТА-НОСІЙ: Власна блокова конструкція (SFS режим). Повністю відповідає формулі Ціолковського та законам Кеплера!"
 	lbl_comparison.text = comp_text
 
 func _on_submit_pressed() -> void:
